@@ -9,7 +9,6 @@ async function list(req, res) {
   const reservations = await service.listReservationsByDate(date);
   res.status(200).json({ data: reservations });
 }
-
 /**
  * Read validation middleware
  */

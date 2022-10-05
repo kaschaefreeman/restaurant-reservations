@@ -34,7 +34,6 @@ function update(updatedReservation) {
     .update(updatedReservation, "*")
     .then((data) => data[0]);
 }
-
 /**
  * Create handler that builds knex query to insert a reservation in database
  * @param {Object} newReservation object of new reservation instance
