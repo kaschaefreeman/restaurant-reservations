@@ -27,6 +27,7 @@ async function reservationExists(req, res, next) {
   }
 }
 
+
 /**
  * Read handler for reservation resources
  */
