@@ -1,0 +1,11 @@
+.dateButtons{
+    color: gray;
+    font-weight: bold;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    text-align: center;    
+}
+.dateButtons:hover{
+    color: #282f77;
+}
