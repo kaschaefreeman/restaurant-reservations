@@ -3,6 +3,8 @@ import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
 import { formatAsDate, formatAsTime } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
+import InputMask from "react-input-mask";
+
 /**
  * Defines the Reservations from used to edit and create new reservations.
  *
@@ -36,27 +38,10 @@ const ReservationsForm = ({ reservation }) => {
     });
   };
 
-  const findErrors = (date, time, errors) => {
-    const setDate = new Date(`${date}T${time}`);
-    const now = new Date();
-    if (setDate.getDay() === 2) {
-      errors.push("Restaurant is closed on Tuesdays");
-    }
-    if (setDate < now) {
-      errors.push("Requested date must be a future date");
-    }
-  };
-
   const handleSubmit = async (event) => {
     const abortController = new AbortController();
-    const errors = [];
-    const { reservation_date, reservation_time, people } = formData;
+    const { reservation_date, reservation_time } = formData;
     event.preventDefault();
-    findErrors(reservation_date, reservation_time, errors);
-    if (errors.length) {
-      setReservationsError({ message: errors.join(" , ") });
-      return;
-    }
     setFormData((curr) => {
       curr.reservation_date = formatAsDate(reservation_date);
       curr.reservation_time = formatAsTime(reservation_time);
@@ -110,7 +95,8 @@ const ReservationsForm = ({ reservation }) => {
           <label htmlFor="mobile_number" className="col-3">
             Mobile Number
           </label>
-          <input
+          <InputMask
+            mask="999-999-9999"
             id="mobile_number"
             name="mobile_number"
             type="tel"

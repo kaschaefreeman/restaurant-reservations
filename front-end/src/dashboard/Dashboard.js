@@ -42,8 +42,6 @@ function Dashboard({ date }) {
   //declare var for url string to be passed when changing date on Dashboard
   let urlQueryString = `/dashboard?date=`;
 
-  //Test date set for quick access of bulk of seeded data. ** To be removed...
-  const testDate = urlQueryString+'2020-12-30'
   const previousClick = () => {
     history.push(urlQueryString + previous(date));
   };
@@ -55,9 +53,6 @@ function Dashboard({ date }) {
   const todayClick = () => {
     history.push(urlQueryString + today());
   };
-  const testDateClick = () =>{
-    history.push(testDate)
-  }
 
   /*Return JSX Dashboard heading with bootstrap card below
    **Card will display the date selected (today's date by default)

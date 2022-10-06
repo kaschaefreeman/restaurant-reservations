@@ -68,12 +68,30 @@ export async function listReservations(params, signal) {
     .then(formatReservationTime);
 }
 
+/**replacer function to be used to in JSON.stringify.
+/*parses the value of people property in a reservation back to a number for db input
+/* input should be a nested object of {data: yourObject}
+* @param nullKey key returned from the input is null
+* @param object the value of input of function is the data object
+* @returns {Object} returns the formatted object
+*/
+const replacer = (nullKey,object)=>{
+  const {data} = object
+  for(let key in data){
+    let value = data[key]
+    if(key==='people'){
+      data[key] = Number(value)
+    }
+  }
+  return object
+}
+
 export async function createReservation(reservation, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`)
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({data: reservation}),
+    body: JSON.stringify({data: reservation},replacer),
     signal,
   };
   return await fetchJson(url, options, {});

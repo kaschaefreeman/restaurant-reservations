@@ -5,7 +5,6 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
  * List handler for reservation resources
  */
 async function list(req, res) {
-  console.log(req.body)
   const { date } = req.query;
   const reservations = await service.listReservationsByDate(date);
   res.status(200).json({ data: reservations });
@@ -82,6 +81,25 @@ function timeIsValid(req,res,next){
   ? next()
   : next({status:400, message:'reservation_time must be a valid time'})
 }
+
+function dateNotOnTuesday (req, res, next) {
+  const {reservation_date, reservation_time} = req.body.data
+  const setDate = new Date(`${reservation_date}T${reservation_time}`);
+  if (setDate.getDay() === 2) {
+    next({status:400, message:"Restaurant is closed on Tuesdays"})
+  }
+  next()
+};
+
+function dateTimeIsInFuture (req,res,next){
+  const {reservation_date, reservation_time} = req.body.data
+  const setDate = new Date(`${reservation_date}T${reservation_time}`);
+  const now = new Date()
+  if (setDate < now) {
+    next({status:400, message:"Reservation date must be a future date and/or time"})
+  }
+  next()
+}
 /**
  * Update handler for reservation resources
  */
@@ -111,6 +129,8 @@ module.exports = {
     peopleIsNumber,
     dateIsAValid,
     timeIsValid,
+    dateNotOnTuesday, 
+    dateTimeIsInFuture,
     asyncErrorBoundary(update),
   ],
   create: [
@@ -119,6 +139,8 @@ module.exports = {
     peopleIsNumber,
     dateIsAValid,
     timeIsValid,
+    dateNotOnTuesday, 
+    dateTimeIsInFuture,
     asyncErrorBoundary(create),
   ],
 };
