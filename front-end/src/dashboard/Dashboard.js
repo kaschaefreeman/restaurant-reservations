@@ -102,9 +102,6 @@ function Dashboard({ date }) {
           </div>
         </div>
       </div>
-      <button className="btn btn-sm m-4" onClick={testDateClick}>
-        Click for testing date
-      </button>
     </main>
   );
 }
