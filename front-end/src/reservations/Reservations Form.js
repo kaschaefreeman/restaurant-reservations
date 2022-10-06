@@ -168,12 +168,12 @@ const ReservationsForm = ({ reservation }) => {
           />
         </div>
         <div className="form-group row justify-content-end">
-          <button type="submit" className="btn btn-primary mx-3 col-1">
+          <button type="submit" className="btn btn-primary mx-3 col-2 ">
             Submit
           </button>
           <button
             type="button"
-            className="btn btn-danger mx-3 col-1"
+            className="btn btn-danger mx-3 col-2 "
             onClick={() => history.goBack()}
           >
             Cancel
