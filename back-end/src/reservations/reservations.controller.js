@@ -15,7 +15,6 @@ async function list(req, res) {
 async function reservationExists(req, res, next) {
   const reservation = await service.read(req.params.reservationId);
   if (reservation) {
-    console.log(reservation, req.body);
     res.locals.reservation = reservation;
     next();
   } else {
