@@ -38,7 +38,8 @@ function ReservationsTable({ reservations, date }) {
       );
     });
     return (
-      <table className="table table-hover table-borderless roundedTable table-responsive ">
+      <div className="table-responsive">
+      <table className="table table-hover table-borderless">
         <thead className="border-bottom table-success">
           <tr>
             <th scope="col">#</th>
@@ -54,6 +55,7 @@ function ReservationsTable({ reservations, date }) {
         </thead>
         <tbody className="">{tableBody}</tbody>
       </table>
+    </div>
     );
   } else {
     return (
