@@ -1,4 +1,11 @@
 const knex = require("../db/connection");
+var types = require('pg').types
+
+//get type parser from Postgres library to set integers returned as strings from db back to an integer
+//needed as People property of reservation is a number and needs to be validated as a proper integer in middleware 
+//validation middleware is located in controller
+types.setTypeParser(types.builtins.INT8, (val)=>parseInt(val,10))
+
 /**
  * List handler that builds knex query to view all reservations in database filtered by reservation_date
  * @param {string} reservationDate
