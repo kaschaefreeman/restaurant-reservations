@@ -63,7 +63,7 @@ const hasRequiredProperties = hasProperties(...VALID_PROPERTIES);
 
 function peopleIsNumber(req, res, next) {
   const {people} = req.body.data
-  Number.isInteger(people) && people > 0 
+  Number.isInteger(Number(people)) && people > 0 
   ? next() 
   : next({status: 400, message: 'people must be a number greater than 0'})
 }
