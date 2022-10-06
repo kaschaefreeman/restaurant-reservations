@@ -88,6 +88,7 @@ const ReservationsForm = ({ reservation }) => {
             placeholder="Enter First Name"
             value={formData.first_name}
             onChange={handleFormChange}
+            required
           />
         </div>
         <div className="form-group row">
@@ -102,6 +103,7 @@ const ReservationsForm = ({ reservation }) => {
             placeholder="Enter Last Name"
             value={formData.last_name}
             onChange={handleFormChange}
+            required
           />
         </div>
         <div className="form-group row">
@@ -117,6 +119,7 @@ const ReservationsForm = ({ reservation }) => {
             pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
             value={formData.mobile_number}
             onChange={handleFormChange}
+            required
           />
         </div>
         <div className="form-group row">
@@ -131,6 +134,7 @@ const ReservationsForm = ({ reservation }) => {
             placeholder="Enter Desired Date of Reservation"
             value={formData.reservation_date}
             onChange={handleFormChange}
+            required
           />
         </div>
         <div className="form-group row">
@@ -144,6 +148,7 @@ const ReservationsForm = ({ reservation }) => {
             className="form-control col"
             value={formData.reservation_time}
             onChange={handleFormChange}
+            required
           />
         </div>
         <div className="form-group row">
@@ -159,6 +164,7 @@ const ReservationsForm = ({ reservation }) => {
             placeholder="Enter Number of People Needing to be Seated"
             value={formData.people}
             onChange={handleFormChange}
+            required
           />
         </div>
         <div className="form-group row justify-content-end">
