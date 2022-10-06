@@ -100,6 +100,27 @@ function dateTimeIsInFuture (req,res,next){
   }
   next()
 }
+
+function timeIsNotBeforeOpen(req,res,next){
+  const {reservation_date, reservation_time} = req.body.data
+  const setDate = new Date(`${reservation_date}T${reservation_time}`)
+  const openTime = new Date(`${reservation_date}T10:30`)
+  if (setDate < openTime){
+    next({status:400, message:'Reservation must be placed after 10:30 AM'})
+  }
+  next()
+}
+
+function timeIsBeforeClose(req,res,next){
+  const {reservation_date, reservation_time} = req.body.data
+  const setDate = new Date(`${reservation_date}T${reservation_time}`)
+  const closeTime = new Date(`${reservation_date}T21:30`)
+  if (setDate > closeTime){
+    next({status:400, message:'Reservation must be placed before 09:30 PM'})
+  }
+  next()
+}
+
 /**
  * Update handler for reservation resources
  */
@@ -131,6 +152,8 @@ module.exports = {
     timeIsValid,
     dateNotOnTuesday, 
     dateTimeIsInFuture,
+    timeIsNotBeforeOpen,
+    timeIsBeforeClose,
     asyncErrorBoundary(update),
   ],
   create: [
@@ -141,6 +164,8 @@ module.exports = {
     timeIsValid,
     dateNotOnTuesday, 
     dateTimeIsInFuture,
+    timeIsNotBeforeOpen,
+    timeIsBeforeClose,
     asyncErrorBoundary(create),
   ],
 };
