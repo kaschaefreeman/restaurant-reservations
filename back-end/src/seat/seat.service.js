@@ -1,4 +1,5 @@
 const knex = require("../db/connection");
+const {read} = require("../reservations/reservations.service")
 var types = require("pg").types;
 
 //get type parser from Postgres library to set integers returned as strings from db back to an integer
@@ -6,25 +7,17 @@ var types = require("pg").types;
 //validation middleware is located in controller
 types.setTypeParser(types.builtins.INT8, (val) => parseInt(val, 10));
 
-function list() {
-  return knex("tables").select("*").orderBy("table_name");
-}
+function update(updatedTable) {
+    return knex("tables")
+      .select("*")
+      .where({ table_id: updatedTable.table_id })
+      .update(updatedTable, "*")
+      .then((data) => data[0]);
+  }
 
-function create(newTable) {
-  return knex("tables")
-    .insert(newTable, "*")
-    .then((data) => data[0]);
-}
-
-function read(tableId) {
-  return knex("tables")
-    .select("*")
-    .where({ table_id: tableId })
-    .first();
-}
+const readReservationId = read
 
 module.exports = {
-  list,
-  create,
-  read,
-};
+  update, 
+  readReservationId,
+}

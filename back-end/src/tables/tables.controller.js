@@ -1,23 +1,13 @@
 const service = require("./table.service");
 const hasProperties = require("../errors/hasProperties");
+const hasValidProperties = require('../errors/hasValidProperties')
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 /*****VALIDATION MIDDLEWARE -- VALIDATES PROPERTIES OF REQ BODY FOR POST ENDPOINT*****/
 const VALID_PROPERTIES = ["table_name", "capacity"];
 
 /* Check Request body has valid properties */
-function hasValidProperties(req, res, next) {
-  const { data = {} } = req.body;
-  const invalidFields = Object.keys(data).filter(
-    (field) => !VALID_PROPERTIES.includes(field)
-  );
-  invalidFields.length
-    ? next({
-        status: 400,
-        message: `Invalid field(s): ${invalidFields.join(",")}`,
-      })
-    : next();
-}
+const hasValidFields = hasValidProperties(VALID_PROPERTIES)
 
 /*Check Request body has all properties */
 const hasRequiredProperties = hasProperties(...VALID_PROPERTIES);
@@ -33,12 +23,13 @@ function tableNameIsValid(req, res, next) {
   }
   next();
 }
-function capacityIsANumber(req,res,next){
-  const {capacity} = req.body.data
-  if (typeof capacity === 'string'){
-    next({status:400, message: "capacity must be a number greater than 0"})
+//Check capacity is a number and not a string
+function capacityIsANumber(req, res, next) {
+  const { capacity } = req.body.data;
+  if (typeof capacity === "string") {
+    next({ status: 400, message: "capacity must be a number greater than 0" });
   }
-  next()
+  next();
 }
 
 /*Check capacity is at least 1 seat */
@@ -46,20 +37,34 @@ function capacityIsGreaterThanZero(req, res, next) {
   const { capacity } = req.body.data;
   if (capacity < 1) {
     next({ status: 400, message: "Table capacity must be at least 1" });
-  } 
+  }
   next();
 }
-
-
 /***********************************************************************************/
+/**
+ * Read handler for tables resources.
+ * Stores table data to res.locals to be accessed in the seat router
+ */
+async function tableExists(req, res, next) {
+  const table  = await service.read(req.params.tableId);
+  console.log(table, req.params.tableId)
+  if (table) {
+    res.locals.table = table;
+    next();
+  } else {
+    next({
+      status: 404,
+      message: `Table id ${req.params.tableId} does not exist`,
+    });
+  }
+}
 /**
  * List handler for tables resources
  */
-async function list(req,res,next){
-    const data = await service.list()
-    res.status(200).json({data})
+async function list(req, res, next) {
+  const data = await service.list();
+  res.status(200).json({ data });
 }
-
 
 /**
  * Create handler for tables resources
@@ -72,11 +77,12 @@ async function create(req, res, next) {
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
-    hasValidProperties,
+    hasValidFields,
     hasRequiredProperties,
     tableNameIsValid,
     capacityIsANumber,
     capacityIsGreaterThanZero,
     asyncErrorBoundary(create),
   ],
+  tableExists: asyncErrorBoundary(tableExists)
 };
