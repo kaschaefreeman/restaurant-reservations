@@ -70,6 +70,7 @@ export async function listReservations(params, signal) {
 
 /**replacer function to be used to in JSON.stringify.
 /*parses the value of people property in a reservation back to a number for db input
+/*Also parses the value of capacity property in a table to a number
 /* input should be a nested object of {data: yourObject}
 * @param nullKey key returned from the input is null
 * @param object the value of input of function is the data object
@@ -79,7 +80,7 @@ const replacer = (nullKey,object)=>{
   const {data} = object
   for(let key in data){
     let value = data[key]
-    if(key==='people'){
+    if(key==='people'||key=='capacity'){
       data[key] = Number(value)
     }
   }
@@ -92,6 +93,17 @@ export async function createReservation(reservation, signal) {
     method: "POST",
     headers,
     body: JSON.stringify({data: reservation},replacer),
+    signal,
+  };
+  return await fetchJson(url, options, {});
+}
+
+export async function createTable(table,signal){
+  const url = new URL(`${API_BASE_URL}/tables`)
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({data: table},replacer),
     signal,
   };
   return await fetchJson(url, options, {});

@@ -2,6 +2,7 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import ReservationsForm from '../reservations/Reservations Form'
+import TablesForm from "../tables/Tables Form";
 import { today } from "../utils/date-time";
 import useQuery from '../utils/useQuery'
 import NotFound from "./NotFound";
@@ -28,6 +29,9 @@ function Routes() {
       </Route>
       <Route exact={true} path="/reservations">
         <Redirect to={"/dashboard"} />
+      </Route>
+      <Route exact={true} path="/tables/new">
+        <TablesForm />
       </Route>
       <Route path="/dashboard">
         <Dashboard
