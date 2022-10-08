@@ -9,8 +9,9 @@ const TablesForm = ({ table }) => {
     table_name: "",
     capacity: "",
   };
-  const [formData, setFormData] = useState({ initialFormData });
+  const [formData, setFormData] = useState({ ...initialFormData });
   const [tablesError, setTablesError] = useState(null)
+
   useEffect(() => {
     if (table) {
       setFormData({ ...initialFormData, ...table });
@@ -37,7 +38,7 @@ const TablesForm = ({ table }) => {
   }
   return (
     <main>
-      <h1 className="mb-3 mt-3">New Reservation</h1>
+      <h1 className="mb-3 mt-3">New Table</h1>
       <form className="shadow-lg p-4 rounded" onSubmit={handleSubmit}>
         <ErrorAlert error={tablesError} />
         <div className="form-group row">

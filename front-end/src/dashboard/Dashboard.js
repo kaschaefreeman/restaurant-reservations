@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./Dashboard.css";
-import { listReservations } from "../utils/api";
-import ErrorAlert from "../layout/ErrorAlert";
-import ReservationsTable from "./Reservations Table";
-import { useHistory } from "react-router";
-import { next, previous, today } from "../utils/date-time";
+import ReservationsCard from "./reservations/Reservations Card";
+import TablesCard from "./tables/TablesCard";
 
 /**
  * Defines the dashboard page.
@@ -13,46 +10,7 @@ import { next, previous, today } from "../utils/date-time";
  * @returns {JSX.Element}
  */
 function Dashboard({ date }) {
-  const [reservations, setReservations] = useState([]);
-  const [reservationsError, setReservationsError] = useState(null);
-
-  const history = useHistory();
-
-  useEffect(loadDashboard, [date]);
-  function loadDashboard() {
-    const abortController = new AbortController();
-    setReservationsError(null);
-    listReservations({ date }, abortController.signal)
-      .then(setReservations)
-      .catch(setReservationsError);
-    return () => abortController.abort();
-  }
-
-  //convert date given in query as YYY-MM-DD to string to be displayed on card title
-  //ex: 'Wed, Oct 3, 2022'
-  const dateString = new Date(`${date}T00:00`).toLocaleString("en-us", {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-
-  
-  //****** Button Click Handlers Used To Change View Date on Dashboard ******//
-  //declare var for url string to be passed when changing date on Dashboard
-  let urlQueryString = `/dashboard?date=`;
-
-  const previousClick = () => {
-    history.push(urlQueryString + previous(date));
-  };
-
-  const nextClick = () => {
-    history.push(urlQueryString + next(date));
-  };
-
-  const todayClick = () => {
-    history.push(urlQueryString + today());
-  };
+ 
 
   /*Return JSX Dashboard heading with bootstrap card below
    **Card will display the date selected (today's date by default)
@@ -62,41 +20,15 @@ function Dashboard({ date }) {
   return (
     <main>
       <h1 className="mb-3 mt-3">Dashboard</h1>
-
-      <div className="card shadow border-light rounded">
-        <div className="card-body row align-middle">
-          <h2 className="card-title fs-5 text-secondary col-lg-6 ">
-            Reservations for {dateString}
-          </h2>
-          <div className="align-top col-lg-6">
-            <span className="row">
-              <p className="accentFontColor col text-lg-end">Go To Date: </p>
-              <button
-                className="btn m-0 btn-sm btn-block col dateButtons"
-                onClick={previousClick}
-              >
-                Prev
-              </button>
-              <button
-                className="btn m-0 btn-sm btn-block col dateButtons"
-                onClick={todayClick}
-              >
-                Today
-              </button>
-              <button
-                className="btn m-0 btn-sm btn-block col dateButtons"
-                onClick={nextClick}
-              >
-                Next
-              </button>
-            </span>
-          </div>
-          <div className="row">
-            <ErrorAlert error={reservationsError} />
-            <ReservationsTable reservations={reservations} date={date} />
-          </div>
-        </div>
-      </div>
+      <article className="row">
+        <section className="col col-lg-7">
+          <ReservationsCard date={date}/>
+        </section>
+        <section className="col mt-4 mt-lg-0 col-lg-5">
+          <TablesCard/>
+        </section>
+      </article>
+      
     </main>
   );
 }

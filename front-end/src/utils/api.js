@@ -80,7 +80,7 @@ const replacer = (nullKey,object)=>{
   const {data} = object
   for(let key in data){
     let value = data[key]
-    if(key==='people'||key=='capacity'){
+    if(key==='people'||key==='capacity' ||key==='reservation_id'){
       data[key] = Number(value)
     }
   }
@@ -98,12 +98,28 @@ export async function createReservation(reservation, signal) {
   return await fetchJson(url, options, {});
 }
 
+export async function listTables(signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  return await fetchJson(url, { headers, signal }, [])
+}
+
 export async function createTable(table,signal){
   const url = new URL(`${API_BASE_URL}/tables`)
   const options = {
     method: "POST",
     headers,
     body: JSON.stringify({data: table},replacer),
+    signal,
+  };
+  return await fetchJson(url, options, {});
+}
+
+export async function seatTable(tableId,reservation_id,signal){
+  const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`)
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({data: {reservation_id:reservation_id}},replacer),
     signal,
   };
   return await fetchJson(url, options, {});
