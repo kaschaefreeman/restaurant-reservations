@@ -74,10 +74,8 @@ const ReservationsCard = ({date}) => {
                 Next
               </button>
           </div>
-          <div className="row">
             <ErrorAlert error={reservationsError} />
             <ReservationsTable reservations={reservations} date={date} />
-          </div>
         </div>
       </div>
   );

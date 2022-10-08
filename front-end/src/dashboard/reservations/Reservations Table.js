@@ -86,11 +86,10 @@ function ReservationsTable({ reservations, date }) {
             <td>{first_name}</td>
             <td>{last_name}</td>
             <td className="text-center">{people}</td>
-            <td>
+            <td className="btn">
               <a
                 href={`/reservations/${reservation_id}/seat`}
                 className="badge badge-warning"
-                style={{textDecoration: "none"}}
               >
                 SEAT
               </a>

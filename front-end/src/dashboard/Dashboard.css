@@ -9,3 +9,10 @@
 .dateButtons:hover{
     color: #282f77;
 }
+a{
+    text-decoration: none;
+}
+
+.reservationRow:hover{
+    background-color: lightgrey
+}
