@@ -4,13 +4,14 @@ const hasValidProperties = require('../errors/hasValidProperties')
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 /*****VALIDATION MIDDLEWARE -- VALIDATES PROPERTIES OF REQ BODY FOR POST ENDPOINT*****/
-const VALID_PROPERTIES = ["table_name", "capacity"];
+const VALID_PROPERTIES = ["table_name", "capacity", "reservation_id"];
+const requiredProperties = ["table_name", "capacity"]
 
 /* Check Request body has valid properties */
 const hasValidFields = hasValidProperties(VALID_PROPERTIES)
 
 /*Check Request body has all properties */
-const hasRequiredProperties = hasProperties(...VALID_PROPERTIES);
+const hasRequiredProperties = hasProperties(...requiredProperties);
 
 /*Check table name is at least 2 characters long */
 function tableNameIsValid(req, res, next) {
