@@ -7,6 +7,10 @@ var types = require("pg").types;
 //validation middleware is located in controller
 types.setTypeParser(types.builtins.INT8, (val) => parseInt(val, 10));
 
+//Read Handler, reads a reservation by id
+const readReservationId = read
+
+//Update table with reservation_id
 function update(updatedTable) {
     return knex("tables")
       .select("*")
@@ -15,9 +19,17 @@ function update(updatedTable) {
       .then((data) => data[0]);
   }
 
-const readReservationId = read
+//Delete the reservation id from table
+function unassignReservation(tableId){
+  return knex("tables")
+    .select("*")
+    .where({table_id: tableId})
+    .update({reservation_id: null},"*")
+}
+
 
 module.exports = {
   update, 
   readReservationId,
+  unassignReservation
 }

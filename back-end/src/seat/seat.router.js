@@ -7,6 +7,10 @@ const methodNotAllowed = require("../errors/methodNotAllowed");
 const router = require("express").Router({ mergeParams: true });
 const controller = require("./seat.controller");
 
-router.route("/").put(controller.update).all(methodNotAllowed);
+router
+  .route("/")
+  .put(controller.update)
+  .delete(controller.delete)
+  .all(methodNotAllowed);
 
 module.exports = router;

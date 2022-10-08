@@ -8,7 +8,6 @@ const hasValidFields = hasValidProperties("reservation_id");
 const hasRequiredProperties = hasProperties("reservation_id");
 /*************************************************************/
 
-
 /*****************VERIFY TABLE WITH RESERVATION INFO**********/
 /*****************TABLE INFO IS STORED RES.LOCALS*************/
 //Read the reservation
@@ -25,13 +24,13 @@ async function reservationExists(req, res, next) {
     });
   }
 }
-//Check table does not already have a reservation
-function checkOccupied(req,res,next){
-  const {reservation_id} = res.locals.table
-  if(reservation_id){
-    next({status:400, message:'Table is occupied'})
+//Check table does not already have a reservation before
+function checkOccupiedBeforeSeating(req, res, next) {
+  const { reservation_id } = res.locals.table;
+  if (reservation_id) {
+    next({ status: 400, message: "Table is occupied" });
   } else {
-    next()
+    next();
   }
 }
 //Check table capacity will fit people in reservation
@@ -43,6 +42,14 @@ function checkCapacity(req, res, next) {
         message: `A reservation for people of ${reservation.people} is too large for table capacity of ${table.capacity}`,
       })
     : next();
+}
+
+function checkTableOccupiedBeforeFinish(req, res, next) {
+  
+  const { reservation_id } = res.locals.table;
+  reservation_id
+    ? next()
+    : next({ status: 400, message: "Table is not occupied" });
 }
 /***************************************************************/
 
@@ -58,13 +65,26 @@ async function update(req, res, next) {
   res.status(200).json({ data });
 }
 
+/**
+ * Delete handler for tables resources.  
+ * Deletes reservation id from table
+ */
+async function finishSeat(req, res, next) {
+  const data = await service.unassignReservation(res.locals.table.table_id);
+  res.status(200).json({ data });
+}
+
 module.exports = {
   update: [
     hasValidFields,
     hasRequiredProperties,
     asyncErrorBoundary(reservationExists),
-    checkOccupied,
+    checkOccupiedBeforeSeating,
     checkCapacity,
     asyncErrorBoundary(update),
+  ],
+  delete: [
+    checkTableOccupiedBeforeFinish,
+    asyncErrorBoundary(finishSeat),
   ],
 };

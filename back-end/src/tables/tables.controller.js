@@ -47,7 +47,6 @@ function capacityIsGreaterThanZero(req, res, next) {
  */
 async function tableExists(req, res, next) {
   const table  = await service.read(req.params.tableId);
-  console.log(table, req.params.tableId)
   if (table) {
     res.locals.table = table;
     next();
