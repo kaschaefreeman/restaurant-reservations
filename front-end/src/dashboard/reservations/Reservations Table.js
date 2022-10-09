@@ -1,26 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 
 function ReservationsTable({ reservations, date }) {
-  //Reservation info is set to display in a table with a nested table of additional reservation info
-  //This useState hook is used to state whether to show the additional info or not
-  const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
-  //this useState hook is used to set which reservation id to show
-  const [showingId, setShowingId] = useState(null);
-
-  /*Click handler that is used to set the reservation Id showing and if to show the additional info
-   * To be used on each table row
-   */
-  const handleReservationClick = ({ target }) => {
-    //will need to get parentNode to allow for click of any table data element within the row
-    setShowingId(target.parentNode.id);
-    setShowAdditionalInfo(!showAdditionalInfo);
-  };
   //if there are reservations for the selected date, map each reservation to a table row.
   //else, state that there are no reservations
   if (reservations.length) {
     /********************************Map each reservation to a table row*****************************************/
-    const tableBody = reservations.map((reservation, index) => {
+    const tableBody = reservations.map((reservation) => {
       //get reservation properties
       const {
         reservation_id,
@@ -29,42 +14,22 @@ function ReservationsTable({ reservations, date }) {
         mobile_number,
         reservation_time,
         people,
-        created_at,
-        updated_at,
+        status,
       } = reservation;
+
+      const seatButton = (
+        <a
+          href={`/reservations/${reservation_id}/seat`}
+          className="badge badge-warning"
+        >
+          SEAT
+        </a>
+      )
 
       //convert the reservation, created, and updated at time and date values to a locale string
       const reservationDate = new Date(
         date + "T" + reservation_time
       ).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-
-      const createdAt = new Date(created_at).toLocaleString();
-      const updatedAt = new Date(updated_at).toLocaleString();
-
-      //Create variable that renders the Mobile number, created at, and updated at properties to its own table
-      //Will be conditionally rendered as a nested table on click of the table row
-      const additionalInfo = (
-        <tr>
-          <td colSpan={7}>
-            <table className="table table-sm m-0 ms-3">
-              <thead>
-                <tr>
-                  <th>Mobile Number</th>
-                  <th>Created At</th>
-                  <th>Updated At</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-bottom">
-                  <td>{mobile_number}</td>
-                  <td>{createdAt}</td>
-                  <td>{updatedAt}</td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-      );
 
       /*****************************RETURN THE MAPPED RESERVATION PROPERTIES TO A TABLE ROW**********************************/
       return (
@@ -72,32 +37,19 @@ function ReservationsTable({ reservations, date }) {
           <tr
             key={reservation_id}
             id={reservation_id}
-            //conditionally render the className to add bottom border style if the reservations additional info is not showing
-            className={
-              showingId == reservation_id && showAdditionalInfo
-                ? "reservationRow"
-                : "reservationRow border-bottom"
-            }
-            onClick={handleReservationClick}
+            className="border-bottom"
           >
-            <th scope="row">{index + 1}</th>
-            <td>{reservation_id}</td>
-            <td>{reservationDate}</td>
+            <th scope="row">{reservation_id}</th>
+            <td className="text-nowrap">{reservationDate}</td>
             <td>{first_name}</td>
             <td>{last_name}</td>
+            <td className="text-nowrap">{mobile_number}</td>
             <td className="text-center">{people}</td>
+            <td data-reservation-id-status={reservation_id}>{status}</td>
             <td className="btn">
-              <a
-                href={`/reservations/${reservation_id}/seat`}
-                className="badge badge-warning"
-              >
-                SEAT
-              </a>
+              {status === "booked" ? seatButton : null}
             </td>
           </tr>
-          {showAdditionalInfo && showingId == reservation_id
-            ? additionalInfo
-            : null}
         </>
       );
     });
@@ -105,16 +57,19 @@ function ReservationsTable({ reservations, date }) {
     /***Render the Table ***/
     return (
       <div className="table-responsive">
-        <table className="table table-borderless">
+        <table className="table table-borderless w-100">
           <thead className="border-bottom table-success">
             <tr>
-              <th scope="col">#</th>
               <th scope="col">Id</th>
               <th scope="col">Time</th>
-              <th scope="col">First</th>
+              <th scope="col">Name</th>
               <th scope="col">Last</th>
+              <th scope="col" className="text-nowrap">
+                Mobile
+              </th>
               <th scope="col">People</th>
-              <th></th>
+              <th scope="col">Status</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>{tableBody}</tbody>

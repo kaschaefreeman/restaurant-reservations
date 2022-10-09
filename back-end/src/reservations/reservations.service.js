@@ -15,6 +15,7 @@ function listReservationsByDate(reservationDate) {
   return knex("reservations")
     .select("*")
     .where({ reservation_date: reservationDate })
+    .whereNot({status:"finished"})
     .orderBy("reservation_time");
 }
 /**
@@ -51,10 +52,23 @@ function create(newReservation) {
     .insert(newReservation, "*")
     .then((data) => data[0]);
 }
+/**
+ * Update handler that builds knex query to update status of reservation instance
+ * @param {Object} reservationId the id of the reservation instance
+ * @returns {Object} Object of reservation data
+ */
+function updateStatus(reservationId, status){
+  return knex("reservations")
+    .select("*")
+    .where({reservation_id: reservationId})
+    .update({status:status}, "*")
+    .then((data)=>data[0])
+}
 
 module.exports = {
   listReservationsByDate,
   read,
   create,
   update,
+  updateStatus
 };

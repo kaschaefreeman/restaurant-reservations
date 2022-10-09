@@ -20,6 +20,7 @@ const ReservationsForm = ({ reservation }) => {
     reservation_date: "",
     people: 1,
     reservation_time: "",
+    status: "booked"
   };
 
   const [formData, setFormData] = useState({ ...initialFormData });

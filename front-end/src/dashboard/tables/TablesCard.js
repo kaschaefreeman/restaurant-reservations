@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router";
 import { listTables, unassignSeat } from "../../utils/api";
 import ErrorAlert from "../../layout/ErrorAlert";
 import TablesTable from "./Tables table";
@@ -6,8 +7,8 @@ import TablesTable from "./Tables table";
 const TablesCard = () => {
   const [tables, setTables] = useState([]);
   const [tablesError, setTablesError] = useState(null);
-
-  useEffect(loadTables, [setTables]);
+  const history = useHistory()
+  useEffect(loadTables, []);
 
   function loadTables() {
     const abortController = new AbortController();
@@ -31,7 +32,7 @@ const TablesCard = () => {
           event.target.id,
           abortController.signal
           );      
-          loadTables()
+          history.go('/dashboard')
       } catch (error) {
         setTablesError(error);
       }

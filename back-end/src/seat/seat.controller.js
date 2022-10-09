@@ -45,11 +45,17 @@ function checkCapacity(req, res, next) {
 }
 
 function checkTableOccupiedBeforeFinish(req, res, next) {
-  
   const { reservation_id } = res.locals.table;
   reservation_id
     ? next()
     : next({ status: 400, message: "Table is not occupied" });
+}
+
+function reservationIsNotSeated(req, res, next) {
+  const { status } = res.locals.reservation;
+  status !== "seated"
+    ? next()
+    : next({ status: 400, message: "reservation is already seated" });
 }
 /***************************************************************/
 
@@ -57,20 +63,28 @@ function checkTableOccupiedBeforeFinish(req, res, next) {
  * Update handler for tables resources
  */
 async function update(req, res, next) {
+  const { reservation_id } = req.body.data;
   const updatedTable = {
     ...res.locals.table,
-    ...req.body.data,
+    reservation_id,
   };
-  const data = await service.update(updatedTable);
+  console.log(updatedTable);
+  const data = await service.seatReservationAtTable(
+    updatedTable,
+    reservation_id
+  );
+  console.log("data returned from update", data);
   res.status(200).json({ data });
 }
 
 /**
- * Delete handler for tables resources.  
+ * Delete handler for tables resources.
  * Deletes reservation id from table
  */
 async function finishSeat(req, res, next) {
-  const data = await service.unassignReservation(res.locals.table.table_id);
+  const { table_id, reservation_id } = res.locals.table;
+  console.log("res table and res id on finish click", table_id, reservation_id);
+  const data = await service.finishSeatReservation(table_id, reservation_id);
   res.status(200).json({ data });
 }
 
@@ -79,12 +93,10 @@ module.exports = {
     hasValidFields,
     hasRequiredProperties,
     asyncErrorBoundary(reservationExists),
+    reservationIsNotSeated,
     checkOccupiedBeforeSeating,
     checkCapacity,
     asyncErrorBoundary(update),
   ],
-  delete: [
-    checkTableOccupiedBeforeFinish,
-    asyncErrorBoundary(finishSeat),
-  ],
+  delete: [checkTableOccupiedBeforeFinish, asyncErrorBoundary(finishSeat)],
 };

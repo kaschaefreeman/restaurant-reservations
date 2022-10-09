@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 
 const TablesTable = ({ tables, handleFinishClick}) => {
 
-    const history = useHistory()
   /**Click handler for finish button on a table's row.
    * Will make call to api to remove the reservation id and mark table free
    * @param {Event} event is the event in the DOM
@@ -31,7 +30,6 @@ const TablesTable = ({ tables, handleFinishClick}) => {
     // Return the table row for each table instance with the id, name, capacity, status, and finish button
     return (
       <tr scope="row">
-        <td>{table_id}</td>
         <td>{table_name}</td>
         <td>{capacity}</td>
         <td

@@ -12,12 +12,22 @@ const VALID_PROPERTIES = [
   "reservation_date",
   "reservation_time",
   "people",
+  "status",
+];
+
+const requiredProperties = [
+  "first_name",
+  "last_name",
+  "mobile_number",
+  "reservation_date",
+  "reservation_time",
+  "people",
 ];
 
 //check if request body has only valid properties of reservation instance
 const hasValidFields = hasValidProperties(VALID_PROPERTIES);
 //Check if request body has all properties
-const hasRequiredProperties = hasProperties(...VALID_PROPERTIES);
+const hasRequiredProperties = hasProperties(...requiredProperties);
 
 //check if people property in req body is a number
 function peopleIsNumber(req, res, next) {
@@ -92,6 +102,19 @@ function timeIsBeforeClose(req, res, next) {
   }
   next();
 }
+
+//Ensure a new reservation is only created with status of booked
+function statusIsBooked(req, res, next) {
+  console.log(req.body.data)
+  const { status } = req.body.data;
+  !status || (status && status == "booked")
+    ? next()
+    : next({
+        status: 400,
+        message: `A new reservation may not have status of ${status}`,
+      });
+}
+
 /**************************************************************************************************/
 
 /**
@@ -123,7 +146,12 @@ async function list(req, res) {
  * Create handler for reservation resources
  */
 async function create(req, res) {
-  const data = await service.create(req.body.data);
+  const newReservation = {
+    ...req.body.data, 
+    status: "booked"
+  }
+  console.log(newReservation)
+  const data = await service.create(newReservation);
   res.status(201).json({ data });
 }
 /**
@@ -144,6 +172,46 @@ async function update(req, res) {
   const data = await service.update(updatedReservation);
   res.status(201).json({ data });
 }
+
+/***********MIDDLEWARE USED TO UPDATE STATUS ON A RESERVATION BY ID****************/
+
+/*To be used on /reservations/:reservationId/status route */
+
+/********************************
+* VALIDATION MIDDLEWARE 
+/********************************/
+
+const validStatus = ["booked", "seated", "finished", "cancelled"];
+
+function statusIsValid(req, res, next) {
+  const { status } = req.body.data;
+  validStatus.includes(status)
+    ? next()
+    : next({ status: 400, message: `Invalid status: ${status}` });
+}
+
+
+
+function statusIsNotFinished(req, res, next) {
+  const { status } = res.locals.reservation;
+  status === "finished"
+    ? next({
+        status: 400,
+        message: "Can not update reservations with status 'finished'",
+      })
+    : next();
+}
+/********************************
+* UPDATE STATUS HANDLER 
+/********************************/
+async function updateStatus(req, res) {
+  const { status } = req.body.data;
+  const { reservation_id } = res.locals.reservation;
+  const data = await service.updateStatus(reservation_id, status);
+  res.status(200).json({ data });
+}
+
+
 /**************************************************************************************************/
 
 module.exports = {
@@ -172,6 +240,13 @@ module.exports = {
     dateNotOnTuesday,
     timeIsNotBeforeOpen,
     timeIsBeforeClose,
+    statusIsBooked,
     asyncErrorBoundary(create),
+  ],
+  updateStatus: [
+    asyncErrorBoundary(reservationExists),
+    statusIsValid,
+    statusIsNotFinished,
+    asyncErrorBoundary(updateStatus),
   ],
 };
