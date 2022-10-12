@@ -68,6 +68,13 @@ export async function listReservations(params, signal) {
     .then(formatReservationTime);
 }
 
+export async function readReservations(reservationId, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`);
+  return await fetchJson(url, { headers, signal }, [])
+    .then(formatReservationDate)
+    .then(formatReservationTime);
+}
+
 /**replacer function to be used to in JSON.stringify.
 /*parses the value of people property in a reservation back to a number for db input
 /*Also parses the value of capacity property in a table to a number
@@ -80,7 +87,8 @@ const replacer = (nullKey,object)=>{
   const {data} = object
   for(let key in data){
     let value = data[key]
-    if(key==='people'||key==='capacity' ||key==='reservation_id'){
+    const parseKeys =['people', 'capacity', 'reservation_id']
+    if(parseKeys.includes(data[key])){
       data[key] = Number(value)
     }
   }
@@ -93,6 +101,28 @@ export async function createReservation(reservation, signal) {
     method: "POST",
     headers,
     body: JSON.stringify({data: reservation},replacer),
+    signal,
+  };
+  return await fetchJson(url, options, {});
+}
+
+export async function updateReservation(reservation, reservationId, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`)
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({data: reservation},replacer),
+    signal,
+  };
+  return await fetchJson(url, options, {});
+}
+
+export async function cancelReservation(reservationId, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservationId}/status`)
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({data: {status: 'cancelled'}}),
     signal,
   };
   return await fetchJson(url, options, {});

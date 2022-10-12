@@ -43,10 +43,6 @@ function finishSeatReservation(tableId, reservationId) {
           throw e;
         });
     })
-    .then(() => {})
-    .catch((e) => {
-      console.log(e);
-    });
 }
 
 function seatReservationAtTable(updatedTable, reservationId) {
@@ -63,10 +59,6 @@ function seatReservationAtTable(updatedTable, reservationId) {
           throw e;
         });
     })
-    .then(() => {})
-    .catch((e) => {
-      console.log(e);
-    });
 }
 
 module.exports = {

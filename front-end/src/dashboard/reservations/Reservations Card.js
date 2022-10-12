@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router";
 import ReservationsTable from "./Reservations Table";
 import ErrorAlert from "../../layout/ErrorAlert";
-import { listReservations } from "../../utils/api";
+import { listReservations, cancelReservation } from "../../utils/api";
 import { previous, next, today } from "../../utils/date-time";
 
 const ReservationsCard = ({date}) => {
@@ -22,6 +22,29 @@ const ReservationsCard = ({date}) => {
     return () => abortController.abort();
   }
 
+
+  const handleCancelClick = async (event) => {
+    event.preventDefault();
+    const abortController = new AbortController();
+    //Prompt to confirm before removing current reservation assignment
+    if (
+      window.confirm(
+        "Do you want to cancel this reservation? This cannot be undone."
+      )
+    ) {
+      //On Confirm, try call to API and catch errors
+      try {
+        await cancelReservation(
+          event.target.id,
+          abortController.signal
+          );      
+          history.go('/dashboard')
+      } catch (error) {
+        setReservationsError(error);
+      }
+    }
+    return () => abortController.abort();
+  };
   //convert date given in query as YYY-MM-DD to string to be displayed on card title
   //ex: 'Wed, Oct 3, 2022'
   const dateString = new Date(`${date}T00:00`).toLocaleString("en-us", {
@@ -75,7 +98,7 @@ const ReservationsCard = ({date}) => {
               </button>
           </div>
             <ErrorAlert error={reservationsError} />
-            <ReservationsTable reservations={reservations} date={date} />
+            <ReservationsTable reservations={reservations} date={date} handleCancelClick={handleCancelClick} />
         </div>
       </div>
   );

@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { createReservation } from "../utils/api";
+import {
+  createReservation,
+  readReservations,
+  updateReservation,
+} from "../utils/api";
 import { formatAsDate, formatAsTime } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
 import InputMask from "react-input-mask";
+import { useParams } from "react-router-dom";
 
 /**
  * Defines the Reservations from used to edit and create new reservations.
  *
  * @returns {JSX.Element}
  */
-const ReservationsForm = ({ reservation }) => {
-  const history = useHistory();
-
+const ReservationsForm = () => {
+  const [reservationsError, setReservationsError] = useState(null);
   const initialFormData = {
     first_name: "",
     last_name: "",
@@ -20,17 +24,31 @@ const ReservationsForm = ({ reservation }) => {
     reservation_date: "",
     people: 1,
     reservation_time: "",
-    status: "booked"
+    status: "booked",
   };
 
-  const [formData, setFormData] = useState({ ...initialFormData });
-  const [reservationsError, setReservationsError] = useState(null);
+  const [formData, setFormData] = useState({});
 
+  const history = useHistory();
+  
+  const { reservation_id } = useParams({ ...initialFormData });
+  const heading = reservation_id ? 'Edit Reservation' : 'New Reservation'
+  console.log(reservation_id);
+
+  function loadReservation(reservationId) {
+    const abortController = new AbortController();
+    setReservationsError(null);
+    readReservations(reservationId, abortController.signal)
+      .then(setFormData)
+      .catch(setReservationsError);
+    return () => abortController.abort();
+  }
+  console.log(formData);
   useEffect(() => {
-    if (reservation) {
-      setFormData({ ...initialFormData, ...reservation });
+    if (reservation_id) {
+      loadReservation(reservation_id);
     }
-  }, [reservation]);
+  }, []);
 
   const handleFormChange = ({ target }) => {
     setFormData({
@@ -48,8 +66,19 @@ const ReservationsForm = ({ reservation }) => {
       curr.reservation_time = formatAsTime(reservation_time);
       return curr;
     });
+    if (reservation_id) {
+      delete formData.reservation_id;
+      delete formData.created_at;
+      delete formData.updated_at;
+    }
     try {
-      await createReservation(formData, abortController.signal);
+      reservation_id
+        ? await updateReservation(
+            formData,
+            reservation_id,
+            abortController.signal
+          )
+        : await createReservation(formData, abortController.signal);
       history.push(`/dashboard?date=${reservation_date}`);
     } catch (error) {
       setReservationsError(error);
@@ -59,7 +88,7 @@ const ReservationsForm = ({ reservation }) => {
 
   return (
     <main>
-      <h1 className="mb-3 mt-3">New Reservation</h1>
+      <h1 className="mb-3 mt-3">{heading}</h1>
       <form className="shadow-lg p-4 rounded" onSubmit={handleSubmit}>
         <ErrorAlert error={reservationsError} />
         <div className="form-group row">
