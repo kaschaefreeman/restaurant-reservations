@@ -28,11 +28,13 @@ const requiredProperties = [
 ];
 
 //check if request body has only valid properties of reservation instance
+//used to validate body properties when creating and updating a reservation instance
 const hasValidFields = hasValidProperties(VALID_PROPERTIES);
 //Check if request body has all properties
 const hasRequiredProperties = hasProperties(...requiredProperties);
 
 //check if people property in req body is a number
+//used to validate body properties when creating and updating a reservation instance
 function peopleIsNumber(req, res, next) {
   const { people } = req.body.data;
   Number.isInteger(people) && people > 0
@@ -41,6 +43,7 @@ function peopleIsNumber(req, res, next) {
 }
 
 //check if date in req body is a valid date
+//used to validate body properties when creating and updating a reservation instance
 function dateIsAValid(req, res, next) {
   if (Date.parse(req.body.data.reservation_date)) {
     next();
@@ -53,6 +56,7 @@ function dateIsAValid(req, res, next) {
 }
 
 //check if reservation time sent in req body is a valid time
+//used to validate body properties when creating and updating a reservation instance
 function timeIsValid(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
   Date.parse(`${reservation_date}T${reservation_time}`)
@@ -61,6 +65,7 @@ function timeIsValid(req, res, next) {
 }
 
 //check if reservation date and time sent in req body are in the future
+//used to validate body properties when creating and updating a reservation instance
 function dateTimeIsInFuture(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
   const setDate = new Date(`${reservation_date}T${reservation_time}`);
@@ -74,6 +79,7 @@ function dateTimeIsInFuture(req, res, next) {
   next();
 }
 //Check if the reservation date in req body is not a tuesday
+//used to validate body properties when creating and updating a reservation instance
 function dateNotOnTuesday(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
   const setDate = new Date(`${reservation_date}T${reservation_time}`);
@@ -83,6 +89,7 @@ function dateNotOnTuesday(req, res, next) {
   next();
 }
 //Check reservation time in the req body is not before 10:30 AM, when the restaurant opens
+//used to validate body properties when creating and updating a reservation instance
 function timeIsNotBeforeOpen(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
   const setDate = new Date(`${reservation_date}T${reservation_time}`);
@@ -93,6 +100,7 @@ function timeIsNotBeforeOpen(req, res, next) {
   next();
 }
 //Check reservation time in the req body is not after 9:30 PM, 60 MIN before restaurant closes
+//used to validate body properties when creating and updating a reservation instance
 function timeIsBeforeClose(req, res, next) {
   const { reservation_date, reservation_time } = req.body.data;
   const setDate = new Date(`${reservation_date}T${reservation_time}`);
@@ -107,6 +115,7 @@ function timeIsBeforeClose(req, res, next) {
 }
 
 //Ensure a new reservation is only created with status of booked
+//used to validate body properties when creating a reservation instance
 function statusIsBooked(req, res, next) {
   console.log(req.body.data)
   const { status } = req.body.data;
@@ -191,8 +200,10 @@ async function update(req, res) {
 * VALIDATION MIDDLEWARE 
 /********************************/
 
+//declare status that are valid for a reservations
 const validStatus = ["booked", "seated", "finished", "cancelled"];
 
+//check if it is a valid status
 function statusIsValid(req, res, next) {
   const { status } = req.body.data;
   validStatus.includes(status)
@@ -200,8 +211,8 @@ function statusIsValid(req, res, next) {
     : next({ status: 400, message: `Invalid status: ${status}` });
 }
 
-
-
+//Check if the status is not Finished. 
+//Used when updating a reservations.  Can not update a reservation that is finished
 function statusIsNotFinished(req, res, next) {
   const { status } = res.locals.reservation;
   status === "finished"
