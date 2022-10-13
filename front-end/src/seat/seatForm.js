@@ -41,7 +41,7 @@ const SeatForm = () => {
         key={table_id}
         value={table_id}
         name={table_name}
-      >{`${table.table_name} - ${table.capacity}`}</option>
+      >{`${table_name} - ${capacity}`}</option>
     );
   });
 

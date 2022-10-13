@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React from "react";
 
 const TablesTable = ({ tables, handleFinishClick}) => {
 
@@ -7,8 +6,6 @@ const TablesTable = ({ tables, handleFinishClick}) => {
    * Will make call to api to remove the reservation id and mark table free
    * @param {Event} event is the event in the DOM
    **/
-
-
   /********************Declare tableRows by mapping through each table**********************/
   const tableRows = tables.map((table, index) => {
     const { table_id, table_name, capacity, reservation_id } = table;
@@ -29,11 +26,11 @@ const TablesTable = ({ tables, handleFinishClick}) => {
       ) : null;
     // Return the table row for each table instance with the id, name, capacity, status, and finish button
     return (
-      <tr scope="row">
+      <tr key={table_id}>
         <td>{table_name}</td>
         <td>{capacity}</td>
         <td
-          className={status == "free" ? "text-success" : null}
+          className={status === "free" ? "text-success" : null}
           data-table-id-status={table_id}
         >
           {status}
@@ -49,11 +46,13 @@ const TablesTable = ({ tables, handleFinishClick}) => {
     <div className="table-responsive">
       <table className="table table-sm table-borderless">
         <thead className="text-secondary">
+          <tr>
           <th scope="col">Id</th>
           <th scope="col">Name</th>
           <th scope="col">Capacity</th>
           <th scope="col">Status</th>
           <th></th>
+          </tr>
         </thead>
         <tbody>{tableRows}</tbody>
       </table>

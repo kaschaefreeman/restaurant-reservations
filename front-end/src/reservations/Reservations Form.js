@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   createReservation,
   readReservations,
@@ -30,9 +30,10 @@ const ReservationsForm = () => {
   const [formData, setFormData] = useState({});
 
   const history = useHistory();
-  
+  const path = useLocation().pathname
+
   const { reservation_id } = useParams({ ...initialFormData });
-  const heading = reservation_id ? 'Edit Reservation' : 'New Reservation'
+  const heading = reservation_id ? "Edit Reservation" : "New Reservation";
   console.log(reservation_id);
 
   function loadReservation(reservationId) {
@@ -48,7 +49,7 @@ const ReservationsForm = () => {
     if (reservation_id) {
       loadReservation(reservation_id);
     }
-  }, []);
+  }, [reservation_id]);
 
   const handleFormChange = ({ target }) => {
     setFormData({
@@ -66,11 +67,6 @@ const ReservationsForm = () => {
       curr.reservation_time = formatAsTime(reservation_time);
       return curr;
     });
-    if (reservation_id) {
-      delete formData.reservation_id;
-      delete formData.created_at;
-      delete formData.updated_at;
-    }
     try {
       reservation_id
         ? await updateReservation(
@@ -85,6 +81,24 @@ const ReservationsForm = () => {
     }
     return () => abortController.abort();
   };
+
+  const statusFormField = (
+    <div className="form-group row">
+          <label htmlFor="status" className="col-3">
+            Reservation Status
+          </label>
+          <select
+            id="status"
+            name="status"
+            className="form-control col"
+            onChange={handleFormChange}
+            value={formData.status}
+          >
+            <option value="booked">booked</option>
+            <option value="cancelled">cancelled</option>
+          </select>
+        </div>
+  )
 
   return (
     <main>
@@ -183,6 +197,7 @@ const ReservationsForm = () => {
             required
           />
         </div>
+        {formData.status !=="cancelled" ? null : statusFormField}
         <div className="form-group row justify-content-end">
           <button type="submit" className="btn btn-primary mx-3 col-2 ">
             Submit

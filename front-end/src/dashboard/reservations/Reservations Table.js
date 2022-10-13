@@ -1,7 +1,9 @@
-import React, { useState } from "react";
-import { cancelReservation } from "../../utils/api";
+import React from "react";
+import "./ReservationsTable.css";
+import { useLocation } from "react-router";
 
-function ReservationsTable({ reservations, date, handleCancelClick }) {
+function ReservationsTable({ reservations, handleCancelClick }) {
+  const path = useLocation().pathname;
   //if there are reservations for the selected date, map each reservation to a table row.
   //else, state that there are no reservations
   if (reservations.length) {
@@ -13,6 +15,7 @@ function ReservationsTable({ reservations, date, handleCancelClick }) {
         first_name,
         last_name,
         mobile_number,
+        reservation_date,
         reservation_time,
         people,
         status,
@@ -21,18 +24,54 @@ function ReservationsTable({ reservations, date, handleCancelClick }) {
       const seatButton = (
         <a
           href={`/reservations/${reservation_id}/seat`}
-          className="btn btn-primary"
+          className={
+            status === "booked" ? "dropdown-item" : "dropdown-item disabled"
+          }
         >
           Seat
         </a>
       );
-      
-      
+      const cancelButton = (
+        <button
+          className={
+            status == "booked"
+              ? "btn btn-sm btn-danger"
+              : "btn btn-sm btn-danger disabled"
+          }
+          data-reservation-id-cancel={reservation_id}
+          onClick={(e) => handleCancelClick(e)}
+          id={reservation_id}
+          title="Cancel Reservation"
+        >
+          X
+        </button>
+      );
+      const editButton = (
+        <a
+          href={`/reservations/${reservation_id}/edit`}
+          className={
+            status === "booked" || status === "cancelled"
+              ? "dropdown-item"
+              : "dropdown-item disabled"
+          }
+        >
+          Edit
+        </a>
+      );
       //convert the reservation, created, and updated at time and date values to a locale string
-      const reservationDate = new Date(
-        date + "T" + reservation_time
+      const options = {
+        month: "numeric",
+        day: "2-digit",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      };
+      const reservationTime = new Date(
+        reservation_date + "T" + reservation_time
       ).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-
+      const reservationDate = new Date(
+        reservation_date + "T" + reservation_time
+      ).toLocaleDateString([], options);
       /*****************************RETURN THE MAPPED RESERVATION PROPERTIES TO A TABLE ROW**********************************/
       return (
         <>
@@ -41,33 +80,38 @@ function ReservationsTable({ reservations, date, handleCancelClick }) {
             id={reservation_id}
             className="border-bottom"
           >
-            {/* <th scope="row">{reservation_id}</th> */}
-            <td className="text-nowrap">{reservationDate}</td>
+            <td className="text-nowrap">{path === "/search" ? reservationDate : reservationTime}</td>
             <td>{first_name}</td>
             <td>{last_name}</td>
             <td className="text-nowrap">{mobile_number}</td>
             <td className="text-center">{people}</td>
             <td data-reservation-id-status={reservation_id}>{status}</td>
             <td>
-              <div className="btn-group-vertical btn-group-sm">
-                {status === "booked" ? seatButton : null}
-
-                <a
-                  href={`/reservations/${reservation_id}/edit`}
-                  className="btn btn-secondary"
+              {status !== "finished" ? (
+                <div
+                  class="btn-group btn-group-sm"
+                  role="group"
+                  aria-label="Basic example"
                 >
-                  Edit
-                </a>
-                <button
-                  type='button'
-                  className="btn btn-danger"
-                  data-reservation-id-cancel={reservation_id}
-                  onClick={handleCancelClick}
-                  id={reservation_id}
-                >
-                  Cancel
-                </button>
-              </div>
+                  <div class="btn-group dropstart">
+                    <button
+                      class="btn btn-sm btn-secondary dropdown-toggle"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      Actions
+                    </button>
+                    <div class="dropdown-menu">
+                      {status === "booked" ? seatButton : null}
+                      {editButton}
+                    </div>
+                  </div>
+                  {status !== "cancelled" ? cancelButton : null}
+                </div>
+              ) : (
+                <p>Actions Unavailable</p>
+              )}
             </td>
           </tr>
         </>
@@ -80,7 +124,7 @@ function ReservationsTable({ reservations, date, handleCancelClick }) {
         <table className="table table-borderless w-100">
           <thead className="border-bottom table-success">
             <tr>
-              <th scope="col">Time</th>
+              <th scope="col">{path === "/search" ? "Date/Time" : "Time"}</th>
               <th scope="col">First</th>
               <th scope="col">Last</th>
               <th scope="col" className="text-nowrap">
@@ -88,7 +132,7 @@ function ReservationsTable({ reservations, date, handleCancelClick }) {
               </th>
               <th scope="col">People</th>
               <th scope="col">Status</th>
-              <th scope="col">Actions</th>
+              <th scope="col">Edit/Cancel</th>
             </tr>
           </thead>
           <tbody>{tableBody}</tbody>

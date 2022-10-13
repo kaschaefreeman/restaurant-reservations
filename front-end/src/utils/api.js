@@ -88,7 +88,7 @@ const replacer = (nullKey,object)=>{
   for(let key in data){
     let value = data[key]
     const parseKeys =['people', 'capacity', 'reservation_id']
-    if(parseKeys.includes(data[key])){
+    if(parseKeys.includes(key)){
       data[key] = Number(value)
     }
   }
@@ -126,6 +126,13 @@ export async function cancelReservation(reservationId, signal) {
     signal,
   };
   return await fetchJson(url, options, {});
+}
+
+export async function findReservationByMobileNumber(mobile_number, signal){
+  const url = new URL(`${API_BASE_URL}/reservations/?mobile_number=${mobile_number}`);
+  return await fetchJson(url, { headers, signal }, [])
+    .then(formatReservationDate)
+    .then(formatReservationTime);
 }
 
 export async function listTables(signal) {

@@ -13,6 +13,9 @@ const VALID_PROPERTIES = [
   "reservation_time",
   "people",
   "status",
+  "reservation_id",
+  "updated_at",
+  "created_at"
 ];
 
 const requiredProperties = [
@@ -138,9 +141,16 @@ async function reservationExists(req, res, next) {
  * List handler for reservation resources
  */
 async function list(req, res) {
-  const { date } = req.query;
-  const reservations = await service.listReservationsByDate(date);
-  res.status(200).json({ data: reservations });
+  const { date, mobile_number } = req.query;
+  let data 
+  if(date){
+    data = await service.listReservationsByDate(date);
+  } else if (mobile_number){
+    data = await service.searchByMobileNumber(mobile_number)
+  } else {
+    res.status(400).json({error: 'Reservations may only be listed by date or mobile_number query'})
+  }
+  res.status(200).json({ data });
 }
 /**
  * Create handler for reservation resources
@@ -170,7 +180,7 @@ async function update(req, res) {
     reservation_id: res.locals.reservation.reservation_id,
   };
   const data = await service.update(updatedReservation);
-  res.status(201).json({ data });
+  res.status(200).json({ data });
 }
 
 /***********MIDDLEWARE USED TO UPDATE STATUS ON A RESERVATION BY ID****************/
