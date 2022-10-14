@@ -19,16 +19,7 @@ const ReservationsForm = () => {
   const [reservationsError, setReservationsError] = useState(null);
   const [formData, setFormData] = useState({});
 
-  //Variable used to initialize form to blank data
-  const initialFormData = {
-    first_name: "",
-    last_name: "",
-    mobile_number: "",
-    reservation_date: "",
-    people: 1,
-    reservation_time: "",
-    status: "booked",
-  };
+
   //Use history to push dashboard to date of the reservation that is created/edited or go back a page on cancel of form input
   const history = useHistory();
 
