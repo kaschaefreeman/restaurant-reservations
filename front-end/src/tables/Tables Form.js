@@ -3,20 +3,10 @@ import { useHistory } from "react-router";
 import ErrorAlert from "../layout/ErrorAlert";
 import { createTable } from "../utils/api";
 
-const TablesForm = ({ table }) => {
+const TablesForm = () => {
   const history = useHistory();
-  const initialFormData = {
-    table_name: "",
-    capacity: "",
-  };
-  const [formData, setFormData] = useState({ ...initialFormData });
-  const [tablesError, setTablesError] = useState(null)
-
-  useEffect(() => {
-    if (table) {
-      setFormData({ ...initialFormData, ...table });
-    }
-  }, [table]);
+  const [formData, setFormData] = useState({ table_name: "", capacity: "" });
+  const [tablesError, setTablesError] = useState(null);
 
   const handleFormChange = ({ target }) => {
     setFormData({
@@ -25,7 +15,7 @@ const TablesForm = ({ table }) => {
     });
   };
 
-  const handleSubmit = async (event)=>{
+  const handleSubmit = async (event) => {
     const abortController = new AbortController();
     event.preventDefault();
     try {
@@ -35,7 +25,7 @@ const TablesForm = ({ table }) => {
       setTablesError(error);
     }
     return () => abortController.abort();
-  }
+  };
   return (
     <main>
       <h1 className="mb-3 mt-3">New Table</h1>

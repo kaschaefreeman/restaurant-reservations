@@ -117,7 +117,6 @@ function timeIsBeforeClose(req, res, next) {
 //Ensure a new reservation is only created with status of booked
 //used to validate body properties when creating a reservation instance
 function statusIsBooked(req, res, next) {
-  console.log(req.body.data);
   const { status } = req.body.data;
   !status || (status && status == "booked")
     ? next()
@@ -157,11 +156,9 @@ async function list(req, res) {
   } else if (mobile_number) {
     data = await service.searchByMobileNumber(mobile_number);
   } else {
-    res
-      .status(400)
-      .json({
-        error: "Reservations may only be listed by date or mobile_number query",
-      });
+    res.status(400).json({
+      error: "Reservations may only be listed by date or mobile_number query",
+    });
   }
   res.status(200).json({ data });
 }

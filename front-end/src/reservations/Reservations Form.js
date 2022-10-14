@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import {
   createReservation,
   readReservations,
@@ -13,10 +13,13 @@ import { useParams } from "react-router-dom";
 /**
  * Defines the Reservations from used to edit and create new reservations.
  *
- * @returns {JSX.Element}
+ * @returns {JSX.Element} Form with input labels and fields for the First Name, Last Name, Mobile Number, Date, Time, and people 
  */
 const ReservationsForm = () => {
   const [reservationsError, setReservationsError] = useState(null);
+  const [formData, setFormData] = useState({});
+
+  //Variable used to initialize form to blank data
   const initialFormData = {
     first_name: "",
     last_name: "",
@@ -26,16 +29,21 @@ const ReservationsForm = () => {
     reservation_time: "",
     status: "booked",
   };
-
-  const [formData, setFormData] = useState({});
-
+  //Use history to push dashboard to date of the reservation that is created/edited or go back a page on cancel of form input
   const history = useHistory();
-  const path = useLocation().pathname
 
-  const { reservation_id } = useParams({ ...initialFormData });
+  //get the reservation id from url parameter if available.
+  //Will be used to read the reservation from API and load its data to the form for editing.
+  const { reservation_id } = useParams();
+
+  //If there is a reservation to be edited change the heading of the page
   const heading = reservation_id ? "Edit Reservation" : "New Reservation";
-  console.log(reservation_id);
 
+  /**
+   * Helper function that makes call to api to read a reservation by the reservation id that is given in the url parameter.
+   * Will then load the reservations information onto the form
+   * @param reservationId - the id of a reservation instance.  Should be given from the url parameter
+   */
   function loadReservation(reservationId) {
     const abortController = new AbortController();
     setReservationsError(null);
@@ -44,13 +52,18 @@ const ReservationsForm = () => {
       .catch(setReservationsError);
     return () => abortController.abort();
   }
-  console.log(formData);
+
+  //On mount and change of the reservation id load the reservation
   useEffect(() => {
     if (reservation_id) {
       loadReservation(reservation_id);
     }
   }, [reservation_id]);
 
+  /**
+   * Form change handler.  Sets form data key matching the name of the elements name to the value of the elements value
+   * @param target the events target element
+   */
   const handleFormChange = ({ target }) => {
     setFormData({
       ...formData,
@@ -58,47 +71,56 @@ const ReservationsForm = () => {
     });
   };
 
+  /**
+   * Form Submit handler.
+   * Submits form data to API to create or update the reservation instance in the db.
+   */
   const handleSubmit = async (event) => {
     const abortController = new AbortController();
     const { reservation_date, reservation_time } = formData;
     event.preventDefault();
+    //format the reservation date and time to match the input in the database
     setFormData((curr) => {
       curr.reservation_date = formatAsDate(reservation_date);
       curr.reservation_time = formatAsTime(reservation_time);
       return curr;
     });
     try {
+      //if there is a reservation id then the reservation with the specified id is to be edited
       reservation_id
         ? await updateReservation(
             formData,
             reservation_id,
             abortController.signal
           )
-        : await createReservation(formData, abortController.signal);
+        : //If not, then this is a new reservation instance needed to be created
+          await createReservation(formData, abortController.signal);
+      //on completion of the update or create action, go to the dashboard with the date of the reservation date
       history.push(`/dashboard?date=${reservation_date}`);
     } catch (error) {
       setReservationsError(error);
     }
     return () => abortController.abort();
   };
-
+  //Variable that renders the form label and select type input to chang the status of a reservation
+  //Needed to conditionally render this input only if the reservation status needed to be changed from booked to cancelled and vice versa
   const statusFormField = (
     <div className="form-group row">
-          <label htmlFor="status" className="col-3">
-            Reservation Status
-          </label>
-          <select
-            id="status"
-            name="status"
-            className="form-control col"
-            onChange={handleFormChange}
-            value={formData.status}
-          >
-            <option value="booked">booked</option>
-            <option value="cancelled">cancelled</option>
-          </select>
-        </div>
-  )
+      <label htmlFor="status" className="col-3">
+        Reservation Status
+      </label>
+      <select
+        id="status"
+        name="status"
+        className="form-control col"
+        onChange={handleFormChange}
+        value={formData.status}
+      >
+        <option value="booked">booked</option>
+        <option value="cancelled">cancelled</option>
+      </select>
+    </div>
+  );
 
   return (
     <main>
@@ -197,7 +219,7 @@ const ReservationsForm = () => {
             required
           />
         </div>
-        {formData.status !=="cancelled" ? null : statusFormField}
+        {formData.status !== "cancelled" ? null : statusFormField}
         <div className="form-group row justify-content-end">
           <button type="submit" className="btn btn-primary mx-3 col-2 ">
             Submit

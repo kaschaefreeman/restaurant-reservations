@@ -64,12 +64,10 @@ async function update(req, res, next) {
     ...res.locals.table,
     reservation_id,
   };
-  console.log(updatedTable);
   const data = await service.seatReservationAtTable(
     updatedTable,
     reservation_id
   );
-  console.log("data returned from update", data);
   res.status(200).json({ data });
 }
 

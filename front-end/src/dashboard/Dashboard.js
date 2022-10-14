@@ -10,25 +10,18 @@ import TablesCard from "./tables/TablesCard";
  * @returns {JSX.Element}
  */
 function Dashboard({ date }) {
- 
-
-  /*Return JSX Dashboard heading with bootstrap card below
-   **Card will display the date selected (today's date by default)
-   **With buttons to go to previous, today, and next date
-   **And a table below with all reservations for specified date
-   */
+  /*Return JSX Dashboard heading with bootstrap card with reservations and card with tables below*/
   return (
     <main>
       <h1 className="mb-3 mt-3">Dashboard</h1>
       <article className="row">
         <section className="col-12 col-lg-8">
-          <ReservationsCard date={date}/>
+          <ReservationsCard date={date} />
         </section>
         <section className="col-12 mt-4 mt-lg-0 col-lg-4">
-          <TablesCard/>
+          <TablesCard />
         </section>
       </article>
-      
     </main>
   );
 }
