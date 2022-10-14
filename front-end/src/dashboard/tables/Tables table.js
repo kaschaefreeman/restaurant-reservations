@@ -47,7 +47,6 @@ const TablesTable = ({ tables, handleFinishClick}) => {
       <table className="table table-sm table-borderless">
         <thead className="text-secondary">
           <tr>
-          <th scope="col">Id</th>
           <th scope="col">Name</th>
           <th scope="col">Capacity</th>
           <th scope="col">Status</th>
