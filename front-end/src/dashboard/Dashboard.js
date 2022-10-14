@@ -21,10 +21,10 @@ function Dashboard({ date }) {
     <main>
       <h1 className="mb-3 mt-3">Dashboard</h1>
       <article className="row">
-        <section className="col col-lg-8">
+        <section className="col-12 col-lg-8">
           <ReservationsCard date={date}/>
         </section>
-        <section className="col mt-4 mt-lg-0 col-lg-4">
+        <section className="col-12 mt-4 mt-lg-0 col-lg-4">
           <TablesCard/>
         </section>
       </article>

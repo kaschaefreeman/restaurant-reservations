@@ -10,8 +10,8 @@ import { Link } from "react-router-dom";
 
 function Menu() {
   return (
-    <nav class="navbar navbar-expand-lg navbar-dark">
-  <div class="container-fluid flex-lg-column ">
+    <nav class="navbar navbar-expand-md navbar-dark">
+  <div class="container-fluid flex-md-column ">
   <Link
           className="navbar-brand justify-content-center align-items-center sidebar-brand m-0"
           to="/"
