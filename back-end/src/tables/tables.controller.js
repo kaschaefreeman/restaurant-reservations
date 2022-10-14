@@ -1,14 +1,14 @@
 const service = require("./table.service");
 const hasProperties = require("../errors/hasProperties");
-const hasValidProperties = require('../errors/hasValidProperties')
+const hasValidProperties = require("../errors/hasValidProperties");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 /*****VALIDATION MIDDLEWARE -- VALIDATES PROPERTIES OF REQ BODY FOR POST ENDPOINT*****/
 const VALID_PROPERTIES = ["table_name", "capacity", "reservation_id"];
-const requiredProperties = ["table_name", "capacity"]
+const requiredProperties = ["table_name", "capacity"];
 
 /* Check Request body has valid properties */
-const hasValidFields = hasValidProperties(VALID_PROPERTIES)
+const hasValidFields = hasValidProperties(VALID_PROPERTIES);
 
 /*Check Request body has all properties */
 const hasRequiredProperties = hasProperties(...requiredProperties);
@@ -45,9 +45,10 @@ function capacityIsGreaterThanZero(req, res, next) {
 /**
  * Read handler for tables resources.
  * Stores table data to res.locals to be accessed in the seat router
+ * Needed to validate table exists before using the seat router to update the table with the reservation id
  */
 async function tableExists(req, res, next) {
-  const table  = await service.read(req.params.tableId);
+  const table = await service.read(req.params.tableId);
   if (table) {
     res.locals.table = table;
     next();
@@ -84,5 +85,5 @@ module.exports = {
     capacityIsGreaterThanZero,
     asyncErrorBoundary(create),
   ],
-  tableExists: asyncErrorBoundary(tableExists)
+  tableExists: asyncErrorBoundary(tableExists),
 };

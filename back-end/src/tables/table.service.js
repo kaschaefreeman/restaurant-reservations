@@ -6,21 +6,21 @@ var types = require("pg").types;
 //validation middleware is located in controller
 types.setTypeParser(types.builtins.INT8, (val) => parseInt(val, 10));
 
+//knex query list all tables in db
 function list() {
   return knex("tables").select("*").orderBy("table_name");
 }
 
+//Create handler - create new table instance
 function create(newTable) {
   return knex("tables")
     .insert(newTable, "*")
     .then((data) => data[0]);
 }
 
+//Read handler - reads table by table id
 function read(tableId) {
-  return knex("tables")
-    .select("*")
-    .where({ table_id: tableId })
-    .first();
+  return knex("tables").select("*").where({ table_id: tableId }).first();
 }
 
 module.exports = {

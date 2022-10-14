@@ -15,7 +15,7 @@ const VALID_PROPERTIES = [
   "status",
   "reservation_id",
   "updated_at",
-  "created_at"
+  "created_at",
 ];
 
 const requiredProperties = [
@@ -117,7 +117,7 @@ function timeIsBeforeClose(req, res, next) {
 //Ensure a new reservation is only created with status of booked
 //used to validate body properties when creating a reservation instance
 function statusIsBooked(req, res, next) {
-  console.log(req.body.data)
+  console.log(req.body.data);
   const { status } = req.body.data;
   !status || (status && status == "booked")
     ? next()
@@ -151,13 +151,17 @@ async function reservationExists(req, res, next) {
  */
 async function list(req, res) {
   const { date, mobile_number } = req.query;
-  let data 
-  if(date){
+  let data;
+  if (date) {
     data = await service.listReservationsByDate(date);
-  } else if (mobile_number){
-    data = await service.searchByMobileNumber(mobile_number)
+  } else if (mobile_number) {
+    data = await service.searchByMobileNumber(mobile_number);
   } else {
-    res.status(400).json({error: 'Reservations may only be listed by date or mobile_number query'})
+    res
+      .status(400)
+      .json({
+        error: "Reservations may only be listed by date or mobile_number query",
+      });
   }
   res.status(200).json({ data });
 }
@@ -166,10 +170,10 @@ async function list(req, res) {
  */
 async function create(req, res) {
   const newReservation = {
-    ...req.body.data, 
-    status: "booked"
-  }
-  console.log(newReservation)
+    ...req.body.data,
+    status: "booked",
+  };
+  console.log(newReservation);
   const data = await service.create(newReservation);
   res.status(201).json({ data });
 }
@@ -211,7 +215,7 @@ function statusIsValid(req, res, next) {
     : next({ status: 400, message: `Invalid status: ${status}` });
 }
 
-//Check if the status is not Finished. 
+//Check if the status is not Finished.
 //Used when updating a reservations.  Can not update a reservation that is finished
 function statusIsNotFinished(req, res, next) {
   const { status } = res.locals.reservation;
@@ -231,8 +235,6 @@ async function updateStatus(req, res) {
   const data = await service.updateStatus(reservation_id, status);
   res.status(200).json({ data });
 }
-
-
 /**************************************************************************************************/
 
 module.exports = {

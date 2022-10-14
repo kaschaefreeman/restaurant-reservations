@@ -11,6 +11,7 @@ const hasRequiredProperties = hasProperties("reservation_id");
 /*****************VERIFY TABLE WITH RESERVATION INFO**********/
 /*****************TABLE INFO IS STORED RES.LOCALS*************/
 //Read the reservation
+//Used to check the reservation id is valid before updating the table with the reservation id
 async function reservationExists(req, res, next) {
   const { reservation_id } = req.body.data;
   const reservation = await service.readReservationId(reservation_id);
@@ -25,6 +26,7 @@ async function reservationExists(req, res, next) {
   }
 }
 //Check table does not already have a reservation before
+//Used to check if the table already has a reservation assigned before adding a new reservation id
 function checkOccupiedBeforeSeating(req, res, next) {
   const { reservation_id } = res.locals.table;
   if (reservation_id) {
@@ -33,6 +35,7 @@ function checkOccupiedBeforeSeating(req, res, next) {
     next();
   }
 }
+
 //Check table capacity will fit people in reservation
 function checkCapacity(req, res, next) {
   const { table, reservation } = res.locals;
@@ -42,13 +45,6 @@ function checkCapacity(req, res, next) {
         message: `A reservation for people of ${reservation.people} is too large for table capacity of ${table.capacity}`,
       })
     : next();
-}
-
-function checkTableOccupiedBeforeFinish(req, res, next) {
-  const { reservation_id } = res.locals.table;
-  reservation_id
-    ? next()
-    : next({ status: 400, message: "Table is not occupied" });
 }
 
 function reservationIsNotSeated(req, res, next) {
@@ -77,6 +73,16 @@ async function update(req, res, next) {
   res.status(200).json({ data });
 }
 
+/*************************************DELETE FUNCTIONS******************************************/
+//Delete Validation Middleware
+//Check if the table is occupied before marking it finished
+//Will be used to validate table has a reservation id before removing the reservation id from the table
+function checkTableOccupiedBeforeFinish(req, res, next) {
+  const { reservation_id } = res.locals.table;
+  reservation_id
+    ? next()
+    : next({ status: 400, message: "Table is not occupied" });
+}
 /**
  * Delete handler for tables resources.
  * Deletes reservation id from table
@@ -87,6 +93,7 @@ async function finishSeat(req, res, next) {
   const data = await service.finishSeatReservation(table_id, reservation_id);
   res.status(200).json({ data });
 }
+/************************************************************************************************/
 
 module.exports = {
   update: [

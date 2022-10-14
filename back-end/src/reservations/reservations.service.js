@@ -1,10 +1,10 @@
 const knex = require("../db/connection");
-var types = require('pg').types
+var types = require("pg").types;
 
 //get type parser from Postgres library to set integers returned as strings from db back to an integer
-//needed as People property of reservation is a number and needs to be validated as a proper integer in middleware 
+//needed as People property of reservation is a number and needs to be validated as a proper integer in middleware
 //validation middleware is located in controller
-types.setTypeParser(types.builtins.INT8, (val)=>parseInt(val,10))
+types.setTypeParser(types.builtins.INT8, (val) => parseInt(val, 10));
 
 /**
  * List handler that builds knex query to view all reservations in database filtered by reservation_date
@@ -15,8 +15,8 @@ function listReservationsByDate(reservationDate) {
   return knex("reservations")
     .select("*")
     .where({ reservation_date: reservationDate })
-    .whereNot({status:"finished"})
-    .whereNot({status:'cancelled'})
+    .whereNot({ status: "finished" })
+    .whereNot({ status: "cancelled" })
     .orderBy("reservation_time");
 }
 /**
@@ -58,12 +58,12 @@ function create(newReservation) {
  * @param {Object} reservationId the id of the reservation instance
  * @returns {Object} Object of reservation data
  */
-function updateStatus(reservationId, status){
+function updateStatus(reservationId, status) {
   return knex("reservations")
     .select("*")
-    .where({reservation_id: reservationId})
-    .update({status:status}, "*")
-    .then((data)=>data[0])
+    .where({ reservation_id: reservationId })
+    .update({ status: status }, "*")
+    .then((data) => data[0]);
 }
 
 function searchByMobileNumber(mobile_number) {
@@ -72,7 +72,7 @@ function searchByMobileNumber(mobile_number) {
       "translate(mobile_number, '() -', '') like ?",
       `%${mobile_number.replace(/\D/g, "")}%`
     )
-    .orderBy("reservation_date",'desc');
+    .orderBy("reservation_date", "desc");
 }
 
 module.exports = {
@@ -81,5 +81,5 @@ module.exports = {
   create,
   update,
   updateStatus,
-  searchByMobileNumber
+  searchByMobileNumber,
 };
