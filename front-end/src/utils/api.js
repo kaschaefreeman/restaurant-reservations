@@ -52,12 +52,31 @@ async function fetchJson(url, options, onCancel) {
   }
 }
 
+/**replacer function to be used to in JSON.stringify.
+/*parses the value of people property in a reservation back to a number for db input
+/*Also parses the value of capacity property in a table to a number
+/* input should be a nested object of {data: yourObject}
+* @param nullKey key returned from the input is null
+* @param object the value of input of function is the data object
+* @returns {Object} returns the formatted object
+*/
+const replacer = (nullKey, object) => {
+  const { data } = object;
+  for (let key in data) {
+    let value = data[key];
+    const parseKeys = ["people", "capacity", "reservation_id"];
+    if (parseKeys.includes(key)) {
+      data[key] = Number(value);
+    }
+  }
+  return object;
+};
+/*****************************Reservations API Functions*****************************/
 /**
- * Retrieves all existing reservation.
- * @returns {Promise<[reservation]>}
- *  a promise that resolves to a possibly empty array of reservation saved in the database.
+ * Retrieves all existing reservation that are not cancelled or finished status.
+ * @returns {Promise<[reservations]>}
+ *  a promise that resolves to a possibly empty array of reservations saved in the database.
  */
-
 export async function listReservations(params, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`);
   Object.entries(params).forEach(([key, value]) =>
@@ -68,102 +87,136 @@ export async function listReservations(params, signal) {
     .then(formatReservationTime);
 }
 
+/**
+ * Retrieves an existing reservation by reservation Id
+ * @returns {Promise<reservation>}
+ *  a promise that resolves to a possibly empty object of a reservation saved in the database.
+ */
 export async function readReservations(reservationId, signal) {
   const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`);
   return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
 }
-
-/**replacer function to be used to in JSON.stringify.
-/*parses the value of people property in a reservation back to a number for db input
-/*Also parses the value of capacity property in a table to a number
-/* input should be a nested object of {data: yourObject}
-* @param nullKey key returned from the input is null
-* @param object the value of input of function is the data object
-* @returns {Object} returns the formatted object
-*/
-const replacer = (nullKey,object)=>{
-  const {data} = object
-  for(let key in data){
-    let value = data[key]
-    const parseKeys =['people', 'capacity', 'reservation_id']
-    if(parseKeys.includes(key)){
-      data[key] = Number(value)
-    }
-  }
-  return object
-}
-
+/**
+ * Creates a new reservation
+ * @returns {Promise<reservation>}
+ *  a promise that resolves to a an object of a new reservation
+ */
 export async function createReservation(reservation, signal) {
-  const url = new URL(`${API_BASE_URL}/reservations`)
+  const url = new URL(`${API_BASE_URL}/reservations`);
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({data: reservation},replacer),
+    body: JSON.stringify({ data: reservation }, replacer),
     signal,
   };
   return await fetchJson(url, options, {});
 }
 
+/**
+ * Updates an existing reservation
+ * @returns {Promise<reservation>}
+ *  a promise that resolves to a an object of an updated reservation
+ */
 export async function updateReservation(reservation, reservationId, signal) {
-  const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`)
+  const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`);
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({data: reservation},replacer),
+    body: JSON.stringify({ data: reservation }, replacer),
     signal,
   };
   return await fetchJson(url, options, {});
 }
 
+/**
+ * Updates the status of an existing reservation to cancelled
+ * @returns {Promise<reservation>}
+ *  a promise that resolves to a an object of a reservation with updated status
+ */
 export async function cancelReservation(reservationId, signal) {
-  const url = new URL(`${API_BASE_URL}/reservations/${reservationId}/status`)
+  const url = new URL(`${API_BASE_URL}/reservations/${reservationId}/status`);
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({data: {status: 'cancelled'}}),
+    body: JSON.stringify({ data: { status: "cancelled" } }),
     signal,
   };
   return await fetchJson(url, options, {});
 }
 
-export async function findReservationByMobileNumber(mobile_number, signal){
-  const url = new URL(`${API_BASE_URL}/reservations/?mobile_number=${mobile_number}`);
+/**
+ * Retrieves all existing reservations that match a mobile_number.
+ * @returns {Promise<[reservations]>}
+ *  a promise that resolves to a possibly empty array of reservations saved in the database.
+ */
+export async function findReservationByMobileNumber(mobile_number, signal) {
+  const url = new URL(
+    `${API_BASE_URL}/reservations/?mobile_number=${mobile_number}`
+  );
   return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
 }
 
+/*****************************Tables API Functions*****************************/
+/**
+ * Retrieves all existing tables.
+ * @returns {Promise<[tables]>}
+ *  a promise that resolves to a possibly empty array of tables saved in the database.
+ */
 export async function listTables(signal) {
   const url = new URL(`${API_BASE_URL}/tables`);
-  return await fetchJson(url, { headers, signal }, [])
+  return await fetchJson(url, { headers, signal }, []);
 }
-
-export async function createTable(table,signal){
-  const url = new URL(`${API_BASE_URL}/tables`)
+/**
+ * Creates a new table
+ * @returns {Promise<table>}
+ *  a promise that resolves to a an object of a new table
+ */
+export async function createTable(table, signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({data: table},replacer),
+    body: JSON.stringify({ data: table }, replacer),
     signal,
   };
   return await fetchJson(url, options, {});
 }
 
-export async function seatTable(tableId,reservation_id,signal){
-  const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`)
+/*****************************Seat API Functions*****************************/
+
+/**
+ * Adds the reservation id to the table and changes the reservations status to seated
+ * @param {*} tableId the table to be updated with reservation id
+ * @param {*} reservation_id the reservation id to be added to table
+ * @param {*} signal Abort controller signal
+ * @returns {Promise<reservation>} promise resolves with updated reservation
+ */
+export async function seatTable(tableId, reservation_id, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`);
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({data: {reservation_id:reservation_id}},replacer),
+    body: JSON.stringify(
+      { data: { reservation_id: reservation_id } },
+      replacer
+    ),
     signal,
   };
   return await fetchJson(url, options, {});
 }
 
-export async function unassignSeat(tableId,signal){
-  const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`)
+/**
+ * Removes the reservation id from the table and changes the reservation status to finished
+ * @param {*} tableId table to delete reservation id
+ * @param {*} signal abort controller signal
+ * @returns {Promise<>} promise resolves with no returned data
+ */
+export async function unassignSeat(tableId, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`);
   const options = {
     method: "DELETE",
     headers,

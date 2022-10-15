@@ -2,18 +2,25 @@ import React, { useState } from "react";
 import { useHistory } from "react-router";
 import ErrorAlert from "../layout/ErrorAlert";
 import { createTable } from "../utils/api";
+import handleFormChange from "../utils/handleFormChange";
 
+/**
+ * Defines the Form from used to create a table. 
+ *
+ * @returns {JSX.Element} Form with input labels and form fields for table name and table capacity
+ */
 const TablesForm = () => {
   const history = useHistory();
   const [formData, setFormData] = useState({ table_name: "", capacity: "" });
   const [tablesError, setTablesError] = useState(null);
 
-  const handleFormChange = ({ target }) => {
-    setFormData({
-      ...formData,
-      [target.name]: target.value,
-    });
-  };
+  /**
+   * Call utils function to change state of formData to the current input
+   * 
+   */ 
+  const handleTableFormChange = ({target})=>{
+    handleFormChange(formData,setFormData,target)
+  }
 
   const handleSubmit = async (event) => {
     const abortController = new AbortController();
@@ -42,7 +49,7 @@ const TablesForm = () => {
             className="form-control col"
             placeholder="Enter Name of Table"
             value={formData.table_name}
-            onChange={handleFormChange}
+            onChange={handleTableFormChange}
             required
           />
         </div>
@@ -57,7 +64,7 @@ const TablesForm = () => {
             className="form-control col"
             placeholder="Enter Capacity of Table"
             value={formData.capacity}
-            onChange={handleFormChange}
+            onChange={handleTableFormChange}
             required
           />
         </div>

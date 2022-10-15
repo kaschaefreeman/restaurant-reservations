@@ -9,6 +9,7 @@ import { formatAsDate, formatAsTime } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
 import InputMask from "react-input-mask";
 import { useParams } from "react-router-dom";
+import handleFormChange from "../utils/handleFormChange";
 
 /**
  * Defines the Reservations from used to edit and create new reservations.
@@ -17,8 +18,17 @@ import { useParams } from "react-router-dom";
  */
 const ReservationsForm = () => {
   const [reservationsError, setReservationsError] = useState(null);
-  const [formData, setFormData] = useState({});
-
+  const initialFormData = {
+    first_name: "", 
+    last_name: "", 
+    mobile_number: "", 
+    reservation_date: "",
+    reservation_time: "",
+    people: 1, 
+    status: "booked"
+  }
+  
+  const [formData, setFormData] = useState({initialFormData});
 
   //Use history to push dashboard to date of the reservation that is created/edited or go back a page on cancel of form input
   const history = useHistory();
@@ -55,11 +65,8 @@ const ReservationsForm = () => {
    * Form change handler.  Sets form data key matching the name of the elements name to the value of the elements value
    * @param target the events target element
    */
-  const handleFormChange = ({ target }) => {
-    setFormData({
-      ...formData,
-      [target.name]: target.value,
-    });
+  const handleReservationFormChange = ({ target }) => {
+    handleFormChange(formData,setFormData,target)
   };
 
   /**
@@ -104,7 +111,7 @@ const ReservationsForm = () => {
         id="status"
         name="status"
         className="form-control col"
-        onChange={handleFormChange}
+        onChange={handleReservationFormChange}
         value={formData.status}
       >
         <option value="booked">booked</option>
@@ -129,7 +136,7 @@ const ReservationsForm = () => {
             className="form-control col"
             placeholder="Enter First Name"
             value={formData.first_name}
-            onChange={handleFormChange}
+            onChange={handleReservationFormChange}
             required
           />
         </div>
@@ -144,7 +151,7 @@ const ReservationsForm = () => {
             className="form-control col"
             placeholder="Enter Last Name"
             value={formData.last_name}
-            onChange={handleFormChange}
+            onChange={handleReservationFormChange}
             required
           />
         </div>
@@ -161,7 +168,7 @@ const ReservationsForm = () => {
             placeholder="012-345-6789"
             pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
             value={formData.mobile_number}
-            onChange={handleFormChange}
+            onChange={handleReservationFormChange}
             required
           />
         </div>
@@ -176,7 +183,7 @@ const ReservationsForm = () => {
             className="form-control col"
             placeholder="Enter Desired Date of Reservation"
             value={formData.reservation_date}
-            onChange={handleFormChange}
+            onChange={handleReservationFormChange}
             required
           />
         </div>
@@ -190,7 +197,7 @@ const ReservationsForm = () => {
             type="time"
             className="form-control col"
             value={formData.reservation_time}
-            onChange={handleFormChange}
+            onChange={handleReservationFormChange}
             required
           />
         </div>
@@ -206,7 +213,7 @@ const ReservationsForm = () => {
             className="form-control col"
             placeholder="Enter Number of People Needing to be Seated"
             value={formData.people}
-            onChange={handleFormChange}
+            onChange={handleReservationFormChange}
             required
           />
         </div>

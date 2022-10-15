@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { findReservationByMobileNumber } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationsTable from "../dashboard/reservations/Reservations Table";
+import handleFormChange from "../utils/handleFormChange";
 
 /**
  * Defines the Search from used to find reservations given a mobile number.
@@ -16,16 +17,13 @@ const SearchReservationForm = () => {
   const [formData, setFormData] = useState({ mobile_number: "" });
 
   /**
-   * Form change handler.  Sets form data key matching the name of the elements name to the value of the elements value
-   * Will also set submit clicked to false since the input is being changed.  This will hide the reservations table until submit is clicked
-   * @param target the events target element
+   * Form change handler calls utils function to change the forms data state with the property of the element's name to the target elements value
+   * * Will also set submit clicked to false since the input is being changed.  This will hide the reservations table until submit is clicked
+   * @param {*} target the events target element 
    */
-  const handleFormChange = ({ target }) => {
+  const handleSearchFormChange = ({ target }) => {
     setSubmitClicked(false);
-    setFormData({
-      ...formData,
-      [target.name]: target.value,
-    });
+    handleFormChange(formData,setFormData,target)
   };
 
   /**
@@ -87,7 +85,7 @@ const SearchReservationForm = () => {
             className="form-control col"
             placeholder="Enter First Name"
             value={formData.mobile_number}
-            onChange={handleFormChange}
+            onChange={handleSearchFormChange}
           />
           <button type="submit" className="btn btn-primary mx-3 col-2 ">
             Submit

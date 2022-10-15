@@ -111,23 +111,23 @@ function ReservationsTable({ reservations, handleCancelClick }) {
             <td data-reservation-id-status={reservation_id}>{status}</td>
             {/* Table data column of the button group for Actions (dropdown with seat and edit links) and the cancel button
              * The Action drop down button will only display if the reservation is not in status of finished */}
-            <td>
+            <td key={`${reservation_id} actions`}>
               {status !== "finished" ? (
                 <div
-                  class="btn-group btn-group-sm"
+                  className="btn-group btn-group-sm"
                   role="group"
                   aria-label="Basic example"
                 >
-                  <div class="btn-group dropstart">
+                  <div className="btn-group dropstart">
                     <button
-                      class="btn btn-sm btn-secondary dropdown-toggle"
+                      className="btn btn-sm btn-secondary dropdown-toggle"
                       type="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
                     >
                       Actions
                     </button>
-                    <div class="dropdown-menu">
+                    <div className="dropdown-menu">
                       {/*seat button only displays if status is booked.  Can only change a booked reservation to seated*/}
                       {status === "booked" ? seatButton : null}
                       {editButton}

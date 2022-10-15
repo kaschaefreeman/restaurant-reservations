@@ -87,7 +87,6 @@ function checkTableOccupiedBeforeFinish(req, res, next) {
  */
 async function finishSeat(req, res, next) {
   const { table_id, reservation_id } = res.locals.table;
-  console.log("res table and res id on finish click", table_id, reservation_id);
   const data = await service.finishSeatReservation(table_id, reservation_id);
   res.status(200).json({ data });
 }
