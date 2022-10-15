@@ -95,7 +95,6 @@ function ReservationsTable({ reservations, handleCancelClick }) {
       * Time will be Date with Time on Search component
       */
       return (
-        <>
           <tr
             key={reservation_id}
             id={reservation_id}
@@ -111,7 +110,7 @@ function ReservationsTable({ reservations, handleCancelClick }) {
             <td data-reservation-id-status={reservation_id}>{status}</td>
             {/* Table data column of the button group for Actions (dropdown with seat and edit links) and the cancel button
              * The Action drop down button will only display if the reservation is not in status of finished */}
-            <td key={`${reservation_id} actions`}>
+            <td>
               {status !== "finished" ? (
                 <div
                   className="btn-group btn-group-sm"
@@ -140,7 +139,6 @@ function ReservationsTable({ reservations, handleCancelClick }) {
               )}
             </td>
           </tr>
-        </>
       );
     });
     /************************************************************************************************************/
