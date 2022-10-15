@@ -7,7 +7,7 @@ import {
 } from "../utils/api";
 import { formatAsDate, formatAsTime } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
-import InputMask from "react-input-mask";
+import InputMask from "comigo-tech-react-input-mask"
 import { useParams } from "react-router-dom";
 import handleFormChange from "../utils/handleFormChange";
 
@@ -104,7 +104,7 @@ const ReservationsForm = () => {
   //Needed to conditionally render this input only if the reservation status needed to be changed from booked to cancelled and vice versa
   const statusFormField = (
     <div className="form-group row">
-      <label htmlFor="status" className="col-3">
+      <label htmlFor="status" className="col-4">
         Reservation Status
       </label>
       <select
@@ -126,7 +126,7 @@ const ReservationsForm = () => {
       <form className="shadow-lg p-4 rounded" onSubmit={handleSubmit}>
         <ErrorAlert error={reservationsError} />
         <div className="form-group row">
-          <label htmlFor="first_name" className="col-3">
+          <label htmlFor="first_name" className="col-4">
             First Name
           </label>
           <input
@@ -141,7 +141,7 @@ const ReservationsForm = () => {
           />
         </div>
         <div className="form-group row">
-          <label htmlFor="last_name" className="col-3">
+          <label htmlFor="last_name" className="col-4">
             Last Name
           </label>
           <input
@@ -156,7 +156,7 @@ const ReservationsForm = () => {
           />
         </div>
         <div className="form-group row">
-          <label htmlFor="mobile_number" className="col-3">
+          <label htmlFor="mobile_number" className="col-4">
             Mobile Number
           </label>
           <InputMask
@@ -173,7 +173,7 @@ const ReservationsForm = () => {
           />
         </div>
         <div className="form-group row">
-          <label htmlFor="reservation_date" className="col-3">
+          <label htmlFor="reservation_date" className="col-4">
             Reservation Date
           </label>
           <input
@@ -188,7 +188,7 @@ const ReservationsForm = () => {
           />
         </div>
         <div className="form-group row">
-          <label htmlFor="reservation_time" className="col-3">
+          <label htmlFor="reservation_time" className="col-4">
             Reservation Time
           </label>
           <input
@@ -202,7 +202,7 @@ const ReservationsForm = () => {
           />
         </div>
         <div className="form-group row">
-          <label htmlFor="people" className="col-3">
+          <label htmlFor="people" className="col-4">
             Number of People
           </label>
           <input
