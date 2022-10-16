@@ -14,7 +14,7 @@ import "./Layout.css";
 function Layout() {
   return (
     <div className="container-fluid bg-opacity-10" >
-      <div className="row vh-lg-100">
+      <div className="row vh-100">
         <div className="col-md-2 side-bar shadow">
           <Menu />
         </div>

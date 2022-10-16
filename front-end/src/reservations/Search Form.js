@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { findReservationByMobileNumber } from "../utils/api";
+import InputMask from "comigo-tech-react-input-mask"
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationsTable from "../dashboard/reservations/Reservations Table";
 import handleFormChange from "../utils/handleFormChange";
@@ -78,14 +79,17 @@ const SearchReservationForm = () => {
           <label htmlFor="mobile_number" className="col-2">
             Mobile Number
           </label>
-          <input
+          <InputMask
+            mask="999-999-9999"
             id="mobile_number"
-            type="text"
             name="mobile_number"
+            type="tel"
             className="form-control col"
-            placeholder="Enter First Name"
+            placeholder="012-345-6789"
+            pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
             value={formData.mobile_number}
             onChange={handleSearchFormChange}
+            required
           />
           <button type="submit" className="btn btn-primary mx-3 col-2 ">
             Submit
