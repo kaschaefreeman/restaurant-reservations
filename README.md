@@ -6,7 +6,7 @@ At this point, the customers will not access the system online
 
 ## Links
 
-* [App Demo](http://reservations-kf-frontend.herokuapp.com/dashboard)
+* [App Demo](https://kf-restaurant-reservations.netlify.app/dashboard)
 
 ## Technology
 
