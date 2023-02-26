@@ -22,7 +22,6 @@ const UserDashboard = () => {
 
     const onLogoutClick= async (event)=>{
         event.preventDefault()
-        console.log('logout clicked')
         const abortController = new AbortController()
         logout(abortController.signal)
         .then(()=>history.push("/users"))

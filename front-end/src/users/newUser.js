@@ -21,7 +21,6 @@ const Register = () => {
   
    
     const handleUserFormChange = ({ target }) => {
-      console.log(target.name, target.value, formData)
       handleFormChange(formData,setFormData,target)
     };
   
