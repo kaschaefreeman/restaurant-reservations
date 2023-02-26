@@ -1,6 +1,10 @@
+
 .side-bar {
   background-color: #3e3d96;
   min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
 }
 
 .accentFontColor{
@@ -9,4 +13,10 @@
 }
 h1{
   color: #282f77;
+}
+
+@media only screen and (min-width: 768px) {
+  .side-bar{
+    height: 100%;
+  }
 }

@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 function Menu() {
   return (
     <nav className="navbar navbar-expand-md navbar-dark">
-      <div className="container-fluid flex-md-column ">
+      <div className="container flex-column">
         <Link
           className="navbar-brand justify-content-center align-items-center sidebar-brand m-0"
           to="/"
@@ -57,12 +57,6 @@ function Menu() {
                 &nbsp;New Table
               </Link>
             </li>
-            <li className="nav-item ">
-              <Link className="nav-link" to="/users">
-                <span className="oi oi-layers" />
-                &nbsp;Login
-              </Link>
-            </li>
           </ul>
         </div>
       </div>
@@ -71,3 +65,4 @@ function Menu() {
 }
 
 export default Menu;
+

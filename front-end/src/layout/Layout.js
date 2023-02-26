@@ -15,7 +15,7 @@ function Layout() {
   return (
     <div className="container-fluid bg-opacity-10" >
       <div className="row vh-100">
-        <div className="col-md-2 side-bar shadow">
+        <div className="col-md-1 col-12 side-bar shadow">
           <Menu />
         </div>
         <div className="col-md-8 col-lg-9 ms-md-4 mt-sm-4 mt-lg-1">
