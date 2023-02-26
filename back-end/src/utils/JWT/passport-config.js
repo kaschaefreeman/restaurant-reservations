@@ -2,10 +2,7 @@
 const knex = require('../../db/connection')
 
 const JwtStrategy = require('passport-jwt').Strategy
-const fs = require('fs');
-const path = require('path');
-const pathToKey = path.join(__dirname, '..', '/JWT/key_pairs', 'id_rsa_pub.pem');
-const PUB_KEY = fs.readFileSync(pathToKey, 'utf8') || process.env.PUBLIC_KEY;
+const PUB_KEY =process.env.PUBLIC_KEY.replace(/^\s+|\s+$/gm,'');
 
 /** JWT Strategy 
  * locate a user where their username will be the phone number

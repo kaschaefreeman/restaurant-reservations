@@ -50,9 +50,6 @@ jobs:
       - name: npm install
         if: steps.frontend-node-cache.outputs.cache-hit != 'true'
         run: npm install
-        
-
-      - run: npm run keyPairs
 
       - run: npm run build --if-present
 

@@ -1,9 +1,5 @@
 const jsonwebtoken = require('jsonwebtoken');
-const fs = require('fs');
-const path = require('path');
-
-const pathToKey = path.join(__dirname, '..', '/JWT/key_pairs', 'id_rsa_priv.pem');
-const PRIV_KEY = fs.readFileSync(pathToKey, 'utf8') || process.env.PRIVATE_KEY;
+const PRIV_KEY = process.env.PRIVATE_KEY.replace(/^\s+|\s+$/gm,'');
 
 /** Issue a JWT token
  * @param {object} user - instance of the user to give a signed JWT authorization token

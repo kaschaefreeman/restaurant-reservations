@@ -28,11 +28,18 @@ At this point, the customers will not access the system online
 
 * Fork and clone this repository.
 * Run `cp ./back-end/.env.sample ./back-end/.env`.
-* Update the `./back-end/.env` file with the connection URL's to your  database instances.
+* Update the `./back-end/.env` file with the connection URL's to your  database instances and secret keys.
 * Run `cp ./front-end/.env.sample ./front-end/.env`.
-* You should not need to make changes to the `./front-end/.env` file unless you want to connect to a backend at a location other than `http://localhost:5001`.
+* You should not need to make changes to the `./front-end/.env` file unless you want to connect to a backend at a location other than `http://localhost:8080`.
 * Run `npm install` to install project dependencies.
-* Run `npm run start:dev` to start your server in development mode.
+* Run `cd ./back-end` and do the following to set up RSA KEY PAIRS:
+  * Run`npm run gen:keys` to get authentication key pairs to be used for passport 
+  - Set the key pairs as env variables:
+  * Run ```export "PRIVATE_KEY=\"`sed 's/$/\\\n/g' src/utils/JWT/key_pairs/id_rsa_priv.pem`\""``` 
+  * Run ```export "PRIVATE_KEY=\"`sed 's/$/\\\n/g' src/utils/JWT/key_pairs/id_rsa_priv.pem`\""```
+  * Run `set:env:keys`
+* Run `cd ..` to return to main directory
+* Run `npm run start:dev` to start your server in development mode and start front-end concurrently.
 
 ## API Documentation
 
