@@ -7,8 +7,8 @@ exports.seed = function (knex) {
     .raw("TRUNCATE TABLE users RESTART IDENTITY CASCADE")
     .then(users.forEach((user) => {
       genPassword(process.env.SEED_PASSWORD)
-        .then((password) => { user.password = password; return user })
+        .then((password) => {user.password = password; return user})
     })
     )
-    .then(() => knex('users').insert(users))
+    .then(()=>knex('users').insert(users))
 }
