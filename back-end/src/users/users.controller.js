@@ -26,7 +26,7 @@ function sendCookies(res) {
 }
 
 /**On Logout remove cookies and clear user from payload */
-function removeCookies(req, res, next) {
+function removeCookies(req, res) {
   res.clearCookie('jwt')
   res.clearCookie('user')
   req.logout()
@@ -46,7 +46,7 @@ async function list(req, res) {
 /**Check user is not already stored in db 
  * to be used when registering a new user
 */
-async function checkExistsingUserByPhone(req, res) {
+async function checkExistsingUserByPhone(req, res, next) {
   const user = await service.readByPhone(req.body.data.phone)
   user
     ? next({ status: 400, message: "User Already Exists with this Number, Please Login" })
@@ -95,7 +95,7 @@ function read(req, res) {
 /**Checks a user with the phone number given exists
  * to be used when user logs in with phone and password
  */
-async function userExistsByPhone(req, res) {
+async function userExistsByPhone(req, res, next) {
   const user = await service.readByPhone(req.body.data.phone)
   if (user) {
     res.locals.user = user
@@ -111,7 +111,6 @@ async function userExistsByPhone(req, res) {
 async function passwordIsValid(req, res, next) {
   const { user } = res.locals
   const isValid = await validPassword(req.body.data.password, user.password)
-  console.log(isValid, req.body.data.password, user.password)
   if (isValid) {
     sendCookies(res)
     res.status(200).json({ data: user })

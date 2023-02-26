@@ -2,9 +2,9 @@ const request = require("supertest");
 
 const app = require("../src/app");
 const knex = require("../src/db/connection");
-const { genPassword, validPassword } = require("../src/utils/utils");
+const { genPassword } = require("../src/utils/password-utils");
 
-describe("US-08 - Change an existing reservation", () => {
+describe("US-09 - Test Users Login and CSRF/JWT Authentification", () => {
   beforeAll(() => {
     return knex.migrate
       .forceFreeMigrationsLock()
@@ -48,24 +48,17 @@ describe("US-08 - Change an existing reservation", () => {
     })
   })
 
-  describe("POST /users/login",  () => {
-
-    
+  describe("POST /users/login", () => {
 
     test("returns 403 if hashed csrf token in cookies is not sent with request and csrf token not sent in request headers", async () => {
 
-      const newAdmin = {
-        name: "JWT TEST",
-        phone: "777-777-7777",
-        password: await genPassword("admin"),
-      }
+      const user = await knex('users')
+        .select("*")
+        .where({ phone: '777-777-7777' })
+        .first()
 
-      const { phone, password } = newAdmin
-  
-  await knex('users')
-        .insert(newAdmin, "*")
-        .then((data) => data[0]);
-        
+      const { phone } = user
+
       const data = { phone, password: 'admin' }
 
       const response = await request(app)
@@ -82,11 +75,14 @@ describe("US-08 - Change an existing reservation", () => {
         .get("/csrf")
         .set("Accept", "application/json")
 
-        const newAdmin = await knex('users').select("*").where({phone: '777-777-7777'}).first()
-  
-        const { phone, password } = newAdmin
+        const user = await knex('users')
+        .select("*")
+        .where({ phone: '777-777-7777' })
+        .first()
 
-        const data = { phone, password: 'admin' }
+      const { phone, password } = user
+
+      const data = { phone, password: 'admin' }
 
       const response = await request(app)
         .post('/users/login')
@@ -100,9 +96,12 @@ describe("US-08 - Change an existing reservation", () => {
 
     test("returns 403 if hashed csrf token in cookies is not sent with request", async () => {
 
-      const newAdmin = await knex('users').select("*").where({phone: '777-777-7777'}).first()
-  
-      const { phone, password } = newAdmin
+      const user = await knex('users')
+        .select("*")
+        .where({ phone: '777-777-7777' })
+        .first()
+
+      const { phone } = user
 
       const data = { phone, password: 'admin' }
 
@@ -132,10 +131,13 @@ describe("US-08 - Change an existing reservation", () => {
      * (tests for admin routes and duties will be specified on test 5,6,7,and 9)
      */
     test('return 200 for VALID POST request with valid CSRF token and sends user a JSON Web Token and userId in the cookies', async () => {
-      
-      const newAdmin = await knex('users').select("*").where({phone: '777-777-7777'}).first()
-  
-      const { phone, password } = newAdmin
+
+      const user = await knex('users')
+        .select("*")
+        .where({ phone: '777-777-7777' })
+        .first()
+
+      const { phone, password } = user
 
       const data = { phone, password: 'admin' }
 
@@ -148,18 +150,18 @@ describe("US-08 - Change an existing reservation", () => {
         .set("Accept", "application/json")
         .set('x-csrf-token', csrfResponse.body.data)
         .set('Cookie', csrfResponse.headers['set-cookie'])
-        .send({data})
+        .send({ data })
 
       expect(response.body.error).toBeUndefined();
       expect(response.body.data).toMatchObject(
         expect.objectContaining({
-          id: expect.any(String),
-          name: "JWT TEST",
+          user_id: expect.any(String),
+          user_name: "JWT TEST",
           phone: "777-777-7777",
           password
         })
       );
-      
+
       /** Read response header of Set-Cookie to see if it includes a given text property */
       const cookieHasProperty = (property) => {
         return response.headers['set-cookie'][0].includes(property)

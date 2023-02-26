@@ -45,9 +45,16 @@ describe("US-01 - Create and list reservations", () => {
 
   describe("POST /reservations", () => {
     test("returns 400 if data is missing", async () => {
+
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ datum: {} });
 
       expect(response.body.error).toBeDefined();
@@ -62,10 +69,15 @@ describe("US-01 - Create and list reservations", () => {
         reservation_time: "13:30",
         people: 1,
       };
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
 
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("first_name");
@@ -82,9 +94,15 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("first_name");
@@ -100,9 +118,15 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("last_name");
@@ -119,9 +143,15 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("last_name");
@@ -136,10 +166,15 @@ describe("US-01 - Create and list reservations", () => {
         reservation_time: "13:30",
         people: 1,
       };
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
 
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("mobile_number");
@@ -156,9 +191,15 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("mobile_number");
@@ -173,10 +214,15 @@ describe("US-01 - Create and list reservations", () => {
         reservation_time: "13:30",
         people: 1,
       };
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
 
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("reservation_date");
@@ -193,9 +239,15 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("reservation_date");
@@ -212,9 +264,15 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("reservation_date");
@@ -230,9 +288,15 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("reservation_time");
@@ -249,9 +313,15 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("reservation_time");
@@ -268,9 +338,15 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.status).toBe(400);
@@ -286,9 +362,15 @@ describe("US-01 - Create and list reservations", () => {
         reservation_time: "17:30",
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("people");
@@ -305,9 +387,15 @@ describe("US-01 - Create and list reservations", () => {
         people: 0,
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("people");
@@ -324,9 +412,15 @@ describe("US-01 - Create and list reservations", () => {
         people: "2",
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("people");
@@ -343,9 +437,15 @@ describe("US-01 - Create and list reservations", () => {
         people: 2,
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toBeUndefined();
