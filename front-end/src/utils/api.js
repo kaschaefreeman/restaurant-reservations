@@ -227,6 +227,7 @@ export async function seatTable(tableId, reservation_id, signal) {
       replacer
     ),
     signal,
+    credentials: 'include'
   };
   return await fetchJson(url, options, {});
 }
@@ -245,6 +246,7 @@ export async function unassignSeat(tableId, signal) {
     headers,
     body: "",
     signal,
+    credentials: 'include'
   };
   return await fetchJson(url, options, {});
 }
@@ -257,6 +259,7 @@ export async function createUser(user, signal) {
     headers,
     body: JSON.stringify({ data: user }, replacer),
     signal,
+    credentials: 'include'
   };
   return await fetchJson(url, options, {});
 }
@@ -275,6 +278,7 @@ export async function updateUser(user, signal) {
     headers,
     body: JSON.stringify({ data: user }, replacer),
     signal,
+    credentials: 'include'
   };
   return await fetchJson(url, options, {});
 }
