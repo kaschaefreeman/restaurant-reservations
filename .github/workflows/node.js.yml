@@ -73,5 +73,5 @@ jobs:
         env:
           DATABASE_URL_TEST: postgresql://postgres:postgres@127.0.0.1:5432
           NODE_ENV: test
-          PUBLIC_KEY: ${{secret.PUBLIC_KEY}}
+          PUBLIC_KEY: ${{secrets.PUBLIC_KEY}}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
