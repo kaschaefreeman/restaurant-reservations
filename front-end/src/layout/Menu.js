@@ -57,6 +57,12 @@ function Menu() {
                 &nbsp;New Table
               </Link>
             </li>
+            <li className="nav-item ">
+              <Link className="nav-link" to="/users">
+                <span className="oi oi-layers" />
+                &nbsp;Login
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
