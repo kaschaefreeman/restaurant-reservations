@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch} from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import ReservationsForm from '../reservations/Reservations Form'
 import SearchReservationForm from "../reservations/Search Form";
@@ -7,7 +7,11 @@ import SeatForm from "../seat/seatForm";
 import TablesForm from "../tables/Tables Form";
 import { today } from "../utils/date-time";
 import useQuery from '../utils/useQuery'
+import Register from "../users/newUser";
+import Login from "../users/Login";
 import NotFound from "./NotFound";
+import UserDashboard from "../users/userDashboard";
+
 
 /**
  * Defines all the routes for the application.
@@ -21,10 +25,28 @@ function Routes() {
   const query = useQuery();
   const date = query.get("date");
 
+  function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    if (match) return match[2];
+  }
+
+  const accessCookie = getCookie('user')
+
   return (
     <Switch>
+
       <Route exact={true} path="/">
         <Redirect to={"/dashboard"} />
+      </Route>
+      <Route exact={true} path="/users/new">
+        <Register />
+      </Route>
+      <Route exact={true} path="/users/:user_id/dashboard">
+        {accessCookie? <UserDashboard  /> : <Redirect to={"/users"}/>}
+      </Route>
+
+      <Route exact={true} path="/users" >
+        {accessCookie? <Redirect to={`users/${accessCookie}/dashboard`}/> : <Login  />}
       </Route>
       <Route exact={true} path="/reservations/new">
         <ReservationsForm />
@@ -42,11 +64,11 @@ function Routes() {
         <TablesForm />
       </Route>
       <Route exact={true} path="/search">
-        <SearchReservationForm/>
+        <SearchReservationForm />
       </Route>
       <Route path="/dashboard">
         <Dashboard
-          date={date? date : today()}
+          date={date ? date : today()}
         />
       </Route>
       <Route>

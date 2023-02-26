@@ -6,13 +6,15 @@ import formatReservationDate from "./format-reservation-date";
 import formatReservationTime from "./format-reservation-date";
 
 const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
 
 /**
  * Defines the default headers for these functions to work with `json-server`
  */
 const headers = new Headers();
 headers.append("Content-Type", "application/json");
+headers.append('x-csrf-token', 'no-current-token')
+
 
 /**
  * Fetch `json` from the specified URL and handle error status codes and ignore `AbortError`s
@@ -71,6 +73,16 @@ const replacer = (nullKey, object) => {
   }
   return object;
 };
+
+ async function getCSRF(signal){
+  const url = new URL(`${API_BASE_URL}/csrf`)
+  return await fetchJson(url, {credentials:'include'}, [])
+}
+
+async function getAndAttachCSRFHeader(signal){
+  const response = await getCSRF(signal)
+  headers.set('x-csrf-token', await response)
+}
 /*****************************Reservations API Functions*****************************/
 /**
  * Retrieves all existing reservation that are not cancelled or finished status.
@@ -82,7 +94,8 @@ export async function listReservations(params, signal) {
   Object.entries(params).forEach(([key, value]) =>
     url.searchParams.append(key, value.toString())
   );
-  return await fetchJson(url, { headers, signal }, [])
+
+  return await fetchJson(url, { headers, signal, credentials:'include' }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
 }
@@ -94,7 +107,7 @@ export async function listReservations(params, signal) {
  */
 export async function readReservations(reservationId, signal) {
   const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`);
-  return await fetchJson(url, { headers, signal }, [])
+  return await fetchJson(url, { headers, signal,credentials:'include' }, [])
     .then(formatReservationDate)
     .then(formatReservationTime);
 }
@@ -104,12 +117,14 @@ export async function readReservations(reservationId, signal) {
  *  a promise that resolves to a an object of a new reservation
  */
 export async function createReservation(reservation, signal) {
+  await getAndAttachCSRFHeader(signal)
   const url = new URL(`${API_BASE_URL}/reservations`);
   const options = {
     method: "POST",
     headers,
     body: JSON.stringify({ data: reservation }, replacer),
     signal,
+    credentials:'include'
   };
   return await fetchJson(url, options, {});
 }
@@ -120,12 +135,14 @@ export async function createReservation(reservation, signal) {
  *  a promise that resolves to a an object of an updated reservation
  */
 export async function updateReservation(reservation, reservationId, signal) {
+  await getAndAttachCSRFHeader(signal)
   const url = new URL(`${API_BASE_URL}/reservations/${reservationId}`);
   const options = {
     method: "PUT",
     headers,
     body: JSON.stringify({ data: reservation }, replacer),
     signal,
+    credentials:'include'
   };
   return await fetchJson(url, options, {});
 }
@@ -136,12 +153,14 @@ export async function updateReservation(reservation, reservationId, signal) {
  *  a promise that resolves to a an object of a reservation with updated status
  */
 export async function cancelReservation(reservationId, signal) {
+  await getAndAttachCSRFHeader(signal)
   const url = new URL(`${API_BASE_URL}/reservations/${reservationId}/status`);
   const options = {
     method: "PUT",
     headers,
     body: JSON.stringify({ data: { status: "cancelled" } }),
     signal,
+    credentials: 'include'
   };
   return await fetchJson(url, options, {});
 }
@@ -168,7 +187,7 @@ export async function findReservationByMobileNumber(mobile_number, signal) {
  */
 export async function listTables(signal) {
   const url = new URL(`${API_BASE_URL}/tables`);
-  return await fetchJson(url, { headers, signal }, []);
+  return await fetchJson(url, { headers, signal, credentials:'include' }, []);
 }
 /**
  * Creates a new table
@@ -176,12 +195,14 @@ export async function listTables(signal) {
  *  a promise that resolves to a an object of a new table
  */
 export async function createTable(table, signal) {
+  await getAndAttachCSRFHeader(signal)
   const url = new URL(`${API_BASE_URL}/tables`);
   const options = {
     method: "POST",
     headers,
     body: JSON.stringify({ data: table }, replacer),
     signal,
+    credentials:'include'
   };
   return await fetchJson(url, options, {});
 }
@@ -196,6 +217,7 @@ export async function createTable(table, signal) {
  * @returns {Promise<reservation>} promise resolves with updated reservation
  */
 export async function seatTable(tableId, reservation_id, signal) {
+  await getAndAttachCSRFHeader(signal)
   const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`);
   const options = {
     method: "PUT",
@@ -216,6 +238,7 @@ export async function seatTable(tableId, reservation_id, signal) {
  * @returns {Promise<>} promise resolves with no returned data
  */
 export async function unassignSeat(tableId, signal) {
+  await getAndAttachCSRFHeader(signal)
   const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`);
   const options = {
     method: "DELETE",
@@ -225,3 +248,64 @@ export async function unassignSeat(tableId, signal) {
   };
   return await fetchJson(url, options, {});
 }
+
+export async function createUser(user, signal) {
+  await getAndAttachCSRFHeader(signal)
+  const url = new URL(`${API_BASE_URL}/users`);
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: user }, replacer),
+    signal,
+  };
+  return await fetchJson(url, options, {});
+}
+
+export async function listUsers(signal, auth) {
+  await getAndAttachCSRFHeader(signal)
+  const url = new URL(`${API_BASE_URL}/users`);
+  return await fetchJson(url, { headers, signal }, []);
+}
+
+export async function updateUser(user, signal) {
+ await getAndAttachCSRFHeader(signal)
+  const url = new URL(`${API_BASE_URL}/users`);
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: user }, replacer),
+    signal,
+  };
+  return await fetchJson(url, options, {});
+}
+export async function readUser(userId, signal) {
+  const url = new URL(`${API_BASE_URL}/users/${userId}`);
+  return await fetchJson(url, { headers, signal, credentials: "include" }, [])
+}
+
+export async function getAuth(login, signal) {
+  await getAndAttachCSRFHeader(signal)
+  const url = new URL(`${API_BASE_URL}/users/login`)
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ data: login }, replacer),
+    signal,
+    credentials: 'include'
+  };
+  console.log(options.body)
+  return await fetchJson(url, options, {})
+}
+
+export async function logout(signal) {
+  await getAndAttachCSRFHeader(signal)
+  const url = new URL(`${API_BASE_URL}/users/logout`)
+  const options = {
+    method: "DELETE",
+    headers,
+    signal,
+    credentials: "include"
+  };
+  return await fetchJson(url, options, {})
+}
+

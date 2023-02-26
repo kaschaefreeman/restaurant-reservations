@@ -30,9 +30,15 @@ describe("US-02 - Create reservations future date", () => {
         people: 3,
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("future");
@@ -48,9 +54,15 @@ describe("US-02 - Create reservations future date", () => {
         people: 3,
       };
 
+      const csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json")
+
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
+        .set('x-csrf-token', csrfResponse.body.data)
+        .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data });
 
       expect(response.body.error).toContain("closed");
