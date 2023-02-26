@@ -24,7 +24,13 @@
     "test:drop-database": "node test/drop-database",
     "test:start": "npx cross-env LOG_LEVEL=warn NODE_ENV=test npm run test:start:run",
     "test:start:run": "run-s test:drop-database start", 
-    "keyPairs": "node src/utils/JWT/generateKeypair.js"
+    "gen:keys": "node src/utils/JWT/generateKeypair.js",
+    "export:key:public": "export \"PUBLIC_KEY=\"`sed 's/$/\\\n/g' src/utils/JWT/key_pairs/id_rsa_pub.pem`\"\"",
+    "export:key:private": "export \"PRIVATE_KEY=\"`sed 's/$/\\\n/g' src/utils/JWT/key_pairs/id_rsa_priv.pem`\"\"",
+    "set:env:key:public": "echo \"PUBLIC_KEY=\" $ PUBLIC_KEY >> .env",
+    "set:env:key:private": "echo \"PRIVATE_KEY=\" $ PRIVATE_KEY >> .env",
+    "set:env:keys": "npm-run-all set:env:key:public set:env:key:private"
+    
   },
   "keywords": [],
   "author": "",
