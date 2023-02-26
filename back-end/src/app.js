@@ -39,9 +39,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3000',
+    origin: process.env.NODE_ENV = 'production' ? process.env.CLIENT_BASE_URL : 'http://localhost:3000',
     allowedHeaders: 'x-csrf-token, content-type'
 }));
+
 app.use(cookieParser(process.env.SESSION_SECRET));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
