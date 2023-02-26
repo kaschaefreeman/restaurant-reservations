@@ -44,6 +44,8 @@ const generateReservations = () =>{
     return reservations
 }
 
-console.log(generateReservations())
 
-module.exports = {generateReservations}
+const fakerReservations = generateReservations()
+console.log(fakerReservations)
+
+module.exports = {fakerReservations}
