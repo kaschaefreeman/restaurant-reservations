@@ -103,13 +103,13 @@ describe("US-06 - Reservation status", () => {
         .set("Accept", "application/json")
 
       const response = await request(app)
-        .put("/reservations/99/status")
+        .put("/reservations/200/status")
         .set("Accept", "application/json")
         .set('x-csrf-token', csrfResponse.body.data)
         .set('Cookie', csrfResponse.headers['set-cookie'])
         .send({ data: { status: "seated" } });
 
-      expect(response.body.error).toContain("99");
+      expect(response.body.error).toContain("200");
       expect(response.status).toBe(404);
     });
 

@@ -35,10 +35,10 @@ describe("US-01 - Create and list reservations", () => {
   describe("GET /reservations/:reservation_id", () => {
     test("returns 404 for non-existent id", async () => {
       const response = await request(app)
-        .get("/reservations/99")
+        .get("/reservations/200")
         .set("Accept", "application/json");
 
-      expect(response.body.error).toContain("99");
+      expect(response.body.error).toContain("200");
       expect(response.status).toBe(404);
     });
   });

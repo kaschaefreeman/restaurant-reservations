@@ -46,6 +46,5 @@ const generateReservations = () =>{
 
 
 const fakerReservations = generateReservations()
-console.log(fakerReservations)
 
 module.exports = {fakerReservations}

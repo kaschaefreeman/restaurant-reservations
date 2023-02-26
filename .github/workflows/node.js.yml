@@ -51,6 +51,8 @@ jobs:
         if: steps.frontend-node-cache.outputs.cache-hit != 'true'
         run: npm install
 
+      - run: node ./back-end/src/utils/JWT/generateKeypair.js
+
       - run: npm run build --if-present
 
       - name: Test frontend
@@ -73,5 +75,3 @@ jobs:
         env:
           DATABASE_URL_TEST: postgresql://postgres:postgres@127.0.0.1:5432
           NODE_ENV: test
-          PUBLIC_KEY: ${{secrets.PUBLIC_KEY}}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
