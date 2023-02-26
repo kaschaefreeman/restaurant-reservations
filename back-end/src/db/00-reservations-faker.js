@@ -30,7 +30,7 @@ function formatAsTime(timeString) {
 
 const generateReservations = () =>{
     const reservations = []
-    for (let i = 0; i <= 199; i++) {
+    for (let i = 0; i <= 500; i++) {
         const reservation = {
             first_name: name.firstName(),
             last_name: name.lastName(),
