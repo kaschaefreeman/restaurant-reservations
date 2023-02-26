@@ -30,12 +30,12 @@ function formatAsTime(timeString) {
 
 const generateReservations = () =>{
     const reservations = []
-    for (let i = 0; i <= 100; i++) {
+    for (let i = 0; i <= 199; i++) {
         const reservation = {
             first_name: name.firstName(),
             last_name: name.lastName(),
             mobile_number: phone.number('###-###-####'),
-            reservation_date: asDateString(date.between('2023-02-15T00:00:00.000Z', '2023-06-30T00:00:00.000Z')),
+            reservation_date: asDateString(date.between('2023-02-15T00:00:00.000Z', '2023-04-30T00:00:00.000Z')),
             reservation_time: formatAsTime(datatype.datetime().toString()),
             people: datatype.number(8),
         }

@@ -30,7 +30,7 @@ module.exports = (passport) => {
         //Locate user in database with ID matching the payload sub (payload sub is assigned the user_id when token is issued)
         knex('users')
             .select('*')
-            .where({ id: jwt_payload.sub })
+            .where({ user_id: jwt_payload.sub })
             .first()
             .then((user) => {
                 user

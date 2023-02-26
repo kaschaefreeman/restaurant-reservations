@@ -20,7 +20,7 @@ router
   .route('/logout')
   .delete(passport.authenticate('jwt', {session:false, failWithError:true}),controller.logout)
   router
-  .route("/:id")
+  .route("/:user_id")
   .get(passport.authenticate('jwt', {session: false, failWithError: true}), controller.read)
 
 router
