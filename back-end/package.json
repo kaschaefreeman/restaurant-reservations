@@ -23,7 +23,8 @@
     "test:9": "npm run test -- us-09",
     "test:drop-database": "node test/drop-database",
     "test:start": "npx cross-env LOG_LEVEL=warn NODE_ENV=test npm run test:start:run",
-    "test:start:run": "run-s test:drop-database start "
+    "test:start:run": "run-s test:drop-database start", 
+    "keyPairs": "node src/utils/JWT/generateKeypair.js"
   },
   "keywords": [],
   "author": "",
