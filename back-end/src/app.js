@@ -40,7 +40,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
     credentials: true,
     origin: process.env.NODE_ENV === 'production' ? process.env.CLIENT_BASE_URL : 'http://localhost:3000',
-    allowedHeaders: 'x-csrf-token, content-type'
+    allowedHeaders: 'x-csrf-token, content-type, access-control-allow-credentials'
 }));
 
 app.use(cookieParser(process.env.SESSION_SECRET));
