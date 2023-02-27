@@ -9,11 +9,11 @@ const doubleCsrfOptions = {
     cookieOptions: {
         httpOnly: true,
         secure: process.env.NODE_ENV == 'production' ? true : false,
-        sameSite: 'none',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : null, 
         path: '/',
         maxAge: (24 *
             60 * 60 * 1000), //1 day - 24 hrs * 60 mins * 60 secs * 1000 ms
-        Domain:process.env.NODE_ENV === 'production' ? process.env.CLIENT_BASE_URL : 'http://localhost:3000',
+        Domain:process.env.NODE_ENV === 'production' ? process.env.CLIENT_BASE_URL : 'localhost',
     },
     getTokenFromRequest: req => req.headers["x-csrf-token"] //Where original token where be read against the hashed cookie
 }

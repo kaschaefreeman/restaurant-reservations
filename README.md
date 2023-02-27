@@ -35,8 +35,8 @@ At this point, the customers will not access the system online
 * Run `cd ./back-end` and do the following to set up RSA KEY PAIRS:
   * Run`npm run gen:keys` to get authentication key pairs to be used for passport 
   - Set the key pairs as env variables:
-  * Run ```export PUBLIC_KEY=\"`sed 's/$/\\\n/g' src/utils/JWT/key_pairs/id_rsa_pub.pem`\" >> .env``` 
-  * Run ```export PRIVATE_KEY=\"`sed 's/$/\\\n/g' src/utils/JWT/key_pairs/id_rsa_priv.pem`\" >> .env```
+  * Run ```export "PRIVATE_KEY=\"`sed 's/$/\\\n/g' src/utils/JWT/key_pairs/id_rsa_priv.pem`\""``` 
+  * Run ```export "PUBLIC_KEY=\"`sed 's/$/\\\n/g' src/utils/JWT/key_pairs/id_rsa_pub.pem`\""```
   * Run `echo PRIVATE_KEY= $PRIVATE_KEY >> .env` && `echo PUBLIC_KEY= $PUBLIC_KEY >> .env`
 * Run `cd ..` to return to main directory
 * Run `npm run start:dev` to start your server in development mode and start front-end concurrently.
