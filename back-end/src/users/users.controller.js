@@ -19,7 +19,7 @@ function sendCookies(res) {
       signed,
       path: '/',
       sameSite: 'none', 
-      domain:process.env.NODE_ENV === 'production' ? process.env.CLIENT_BASE_URL : 'http://localhost:3000'
+      Domain:process.env.NODE_ENV === 'production' ? process.env.CLIENT_BASE_URL : 'http://localhost:3000'
     }
   }
   res.cookie('jwt',jwt.token, cookieOptions(true,true))
