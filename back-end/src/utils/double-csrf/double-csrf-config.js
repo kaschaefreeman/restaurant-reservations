@@ -8,6 +8,7 @@ const doubleCsrfOptions = {
     cookieName: "csrfToken", //name of cookie to be sent with response (cookie with be hash of csrf token)
     cookieOptions: {
         httpOnly: true,
+        secure: process.env.NODE_ENV == 'production' ? true : false,
         sameSite: true,
         path: '/',
         maxAge: (24 *
