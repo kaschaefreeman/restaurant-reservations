@@ -9,7 +9,7 @@ const doubleCsrfOptions = {
     cookieOptions: {
         httpOnly: true,
         secure: process.env.NODE_ENV == 'production' ? true : false,
-        sameSite: 'lax',
+        sameSite: 'none',
         path: '/',
         maxAge: (24 *
             60 * 60 * 1000), //1 day - 24 hrs * 60 mins * 60 secs * 1000 ms
