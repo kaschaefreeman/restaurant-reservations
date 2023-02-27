@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, Route, Switch} from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
 import ReservationsForm from '../reservations/Reservations Form'
@@ -11,6 +11,7 @@ import Register from "../users/newUser";
 import Login from "../users/Login";
 import NotFound from "./NotFound";
 import UserDashboard from "../users/userDashboard";
+import { getCookie, loggedIn } from "../utils/cookie";
 
 
 /**
@@ -20,17 +21,17 @@ import UserDashboard from "../users/userDashboard";
  *
  * @returns {JSX.Element}
  */
-function Routes() {
+function Routes({setIsLoggedIn}) {
   //get date from url query params for Dashboard 
   const query = useQuery();
   const date = query.get("date");
 
-  function getCookie(name) {
-    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-    if (match) return match[2];
-  }
+  const isAuthorized = loggedIn()
+  const user_id = getCookie('user')
 
-  const accessCookie = getCookie('user')
+  useEffect(()=>{
+    setIsLoggedIn(isAuthorized)
+  },[isAuthorized, setIsLoggedIn])
 
   return (
     <Switch>
@@ -42,11 +43,10 @@ function Routes() {
         <Register />
       </Route>
       <Route exact={true} path="/users/:user_id/dashboard">
-        {accessCookie? <UserDashboard  /> : <Redirect to={"/users"}/>}
+        {isAuthorized? <UserDashboard  /> : <Redirect to={"/users"}/>}
       </Route>
-
       <Route exact={true} path="/users" >
-        {accessCookie? <Redirect to={`users/${accessCookie}/dashboard`}/> : <Login  />}
+        {isAuthorized? <Redirect to={`users/${user_id}/dashboard`}/> : <Login  />}
       </Route>
       <Route exact={true} path="/reservations/new">
         <ReservationsForm />

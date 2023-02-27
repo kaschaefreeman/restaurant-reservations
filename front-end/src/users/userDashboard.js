@@ -24,7 +24,7 @@ const UserDashboard = () => {
         event.preventDefault()
         const abortController = new AbortController()
         logout(abortController.signal)
-        .then(()=>history.push("/users"))
+        .then(()=>history.push("/"))
         .catch(setUserError);
 
     }

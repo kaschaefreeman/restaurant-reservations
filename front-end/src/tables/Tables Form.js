@@ -39,7 +39,7 @@ const TablesForm = () => {
       <form className="shadow-lg p-4 rounded" onSubmit={handleSubmit}>
         <ErrorAlert error={tablesError} />
         <div className="form-group row">
-          <label htmlFor="first_name" className="col-3">
+          <label htmlFor="table_name" className="col-3">
             Table Name
           </label>
           <input

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Menu from "./Menu";
 import Routes from "./Routes";
 
 import "./Layout.css";
-
+import { loggedIn } from "../utils/cookie";
 /**
  * Defines the main layout of the application.
  *
@@ -12,16 +12,17 @@ import "./Layout.css";
  * @returns {JSX.Element}
  */
 function Layout() {
+
+  const [isLoggedIn, setIsLoggedIn] = useState(loggedIn())
+
   return (
-    <div className="container-fluid bg-opacity-10" >
-      <div className="row vh-100">
-        <div className="col-md-1 col-12 side-bar shadow">
-          <Menu />
+    <div className="main-container" >
+        <div className="col-md-1 col-12 side-bar shadow sticky">
+          <Menu isLoggedIn={isLoggedIn}/>
         </div>
         <div className="col-md-8 col-lg-9 ms-md-4 mt-sm-4 mt-lg-1">
-          <Routes />
+          <Routes setIsLoggedIn={setIsLoggedIn}/>
         </div>
-      </div>
     </div>
   );
 }

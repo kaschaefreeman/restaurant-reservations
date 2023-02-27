@@ -297,7 +297,6 @@ export async function getAuth(login, signal) {
     signal,
     credentials: 'include'
   };
-  console.log(options.body)
   return await fetchJson(url, options, {})
 }
 

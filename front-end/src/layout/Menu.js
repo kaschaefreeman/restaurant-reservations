@@ -8,9 +8,10 @@ import { Link } from "react-router-dom";
  * @returns {JSX.Element}
  */
 
-function Menu() {
+function Menu({isLoggedIn}) {
+
   return (
-    <nav className="navbar navbar-expand-md navbar-dark">
+    <nav className="navbar navbar-expand-md sticky navbar-dark">
       <div className="container flex-column">
         <Link
           className="navbar-brand justify-content-center align-items-center sidebar-brand m-0"
@@ -59,8 +60,8 @@ function Menu() {
             </li>
             <li className="nav-item ">
               <Link className="nav-link" to="/users">
-                <span className="oi oi-layers" />
-                &nbsp;Login
+                <span className="oi oi-person" />
+                  &nbsp;{isLoggedIn? "Account" : "Login"}
               </Link>
             </li>
           </ul>

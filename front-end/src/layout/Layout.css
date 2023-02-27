@@ -1,10 +1,22 @@
+.main-container{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh; 
+}
 
 .side-bar {
   background-color: #3e3d96;
   min-width: 200px;
   display: flex;
   flex-direction: column;
-  height: fit-content;
+}
+
+.sticky{
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
 }
 
 .accentFontColor{
@@ -16,7 +28,7 @@ h1{
 }
 
 @media only screen and (min-width: 768px) {
-  .side-bar{
-    height: 100%;
+  .main-container{
+    flex-direction: row;
   }
 }

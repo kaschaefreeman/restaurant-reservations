@@ -27,7 +27,6 @@ function sendCookies(res) {
 
 /**On Logout remove cookies and clear user from payload */
 function removeCookies(req, res,next) {
-  console.log(req.user)
   res.clearCookie('jwt')
   res.clearCookie('user')
   req.user =null
