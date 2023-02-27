@@ -14,6 +14,7 @@ const API_BASE_URL =
 const headers = new Headers();
 headers.append("Content-Type", "application/json");
 headers.append('x-csrf-token', 'no-current-token')
+headers.append('Access-Control-Allow-Credentials', true)
 
 
 /**
