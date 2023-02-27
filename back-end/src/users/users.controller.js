@@ -18,7 +18,7 @@ function sendCookies(res) {
       expires: new Date(jwt.expires),
       signed,
       path: '/',
-      sameSite: false
+      sameSite: 'lax'
     }
   }
   res.cookie('jwt',jwt.token, cookieOptions(true,true))
