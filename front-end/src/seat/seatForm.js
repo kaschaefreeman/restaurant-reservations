@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router";
-import { listTables, seatTable } from "../utils/api";
+import { listTables, readReservations, seatTable } from "../utils/api";
 import ErrorAlert from "../../src/layout/ErrorAlert";
 
 /**
@@ -12,6 +12,7 @@ const SeatForm = () => {
   //get the reservation id from url parameter
   //Used to add the Id to the table in the db
   const { reservation_id } = useParams();
+  const [reservation, setReservation] = useState({})
   //Used to set the list of all tables for select options
   const [tables, setTables] = useState([]);
   const [seatError, setSeatError] = useState(null);
@@ -21,7 +22,12 @@ const SeatForm = () => {
   //Use history to go to dashboard after submit, and go back on cancel
   const history = useHistory();
 
-  useEffect(loadTables, []);
+  function loadReservation(){
+    const abortController = new AbortController();
+    setSeatError(null);
+    readReservations(reservation_id,abortController.signal).then(setReservation).catch(setSeatError)
+    return () =>abortController.abort()
+  }
 
   /**
    * Helper function that loads all tables from the API
@@ -33,6 +39,11 @@ const SeatForm = () => {
     listTables(abortController.signal).then(setTables).catch(setSeatError);
     return () => abortController.abort();
   }
+
+  useEffect(loadTables, []);
+
+  useEffect(loadReservation, [reservation_id])
+
 
   /**
    * Form change handler that sets the table selected when the option is changed
@@ -70,10 +81,13 @@ const SeatForm = () => {
     );
   });
 
+  const {first_name, last_name, people} = reservation
+
   //Render the form with the select input box and table options
   return (
     <main>
-      <h1>Seating Reservation {reservation_id}</h1>
+      <h1>Seating</h1>
+      <h2 className="text-secondary font-monospace">{first_name} {last_name}'s Reservation for {people} people</h2>
       <form className="shadow-lg p-4 rounded" onSubmit={handleSubmit}>
         <ErrorAlert error={seatError} />
         <div className="form-group row">
