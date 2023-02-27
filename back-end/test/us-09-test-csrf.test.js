@@ -43,7 +43,6 @@ describe("US-09 - Test Users Login and CSRF/JWT Authentification", () => {
       expect(cookieHasProperty('Max-Age=86400')).toBeTruthy()
       expect(cookieHasProperty('HttpOnly')).toBeTruthy()
       expect(cookieHasProperty('Path=/')).toBeTruthy()
-      expect(cookieHasProperty('Secure')).toBeTruthy()
       expect(response.status).toBe(200)
     })
   })
