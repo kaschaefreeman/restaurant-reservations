@@ -32,7 +32,7 @@ const Login = () => {
       const abortController = new AbortController();
     try {
         const response = await getAuth(formData, abortController.signal)
-        const user = response
+        const user = await response
         history.push(`/users/${user.user_id}/dashboard`)
       } catch (error) {
         setLoginError(error);
