@@ -18,7 +18,8 @@ function sendCookies(res) {
       expires: new Date(jwt.expires),
       signed,
       path: '/',
-      sameSite: 'lax'
+      sameSite: 'lax', 
+      domain:process.env.NODE_ENV === 'production' ? process.env.CLIENT_BASE_URL : 'http://localhost:3000'
     }
   }
   res.cookie('jwt',jwt.token, cookieOptions(true,true))
