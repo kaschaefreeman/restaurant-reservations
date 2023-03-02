@@ -16,6 +16,8 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
           POSTGRES_DB: postgres
+          PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
+          PUBLIC_KEY: ${{secrets.PUBLIC_KEY}}
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
