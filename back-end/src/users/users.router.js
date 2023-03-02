@@ -18,14 +18,19 @@ router
 
 router
   .route('/logout')
-  .delete(passport.authenticate('jwt', {session:false, failWithError:true}),controller.logout)
-  router
+  .delete(passport.authenticate('jwt', { session: false, failWithError: true }), controller.logout)
+
+router
+  .route('/isAuthorized')
+  .get(passport.authenticate('jwt', { session: false, failWithError: true }),controller.isAuthorized)
+
+router
   .route("/:user_id")
-  .get(passport.authenticate('jwt', {session: false, failWithError: true}), controller.read)
+  .get(passport.authenticate('jwt', { session: false, failWithError: true }), controller.read)
 
 router
   .route("/")
-  .get(passport.authenticate('jwt', {session: false}), controller.list)
+  .get(passport.authenticate('jwt', { session: false }), controller.list)
   .post(controller.create)
   .all(methodNotAllowed);
 

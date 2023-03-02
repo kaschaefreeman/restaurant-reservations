@@ -3,33 +3,18 @@ require("dotenv").config()
 
 const asyncErrorBoundary = require('../errors/asyncErrorBoundary');
 const { validPassword, genPassword } = require('../utils/password-utils');
-const { issueJWT } = require('../utils/JWT/issueJWT')
+const { issueJWT } = require('../utils/JWT/issueJWT');
+const { clearCookieOptions } = require('../utils/cookieOptions');
 
-/** Function to send JWT Token in response cookies
- * Will be used as nested middleware upon validation of a password for login route and after creating a new user
- */
-function sendCookies(res) {
-  const { user } = res.locals
-  const jwt = issueJWT(user)
-  const cookieOptions = (httpOnly=false,signed=false)=>{
-    return {
-      httpOnly,
-      secure: process.env.NODE_ENV == 'production' ? true : false,
-      expires: new Date(jwt.expires),
-      signed,
-      path: '/',
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : null, 
-      Domain:process.env.NODE_ENV === 'production' ? process.env.CLIENT_BASE_URL : 'localhost',
-    }
-  }
-  res.cookie('jwt',jwt.token, cookieOptions(true,true))
-  res.cookie('user',user.user_id, cookieOptions())
+
+function isAuthenticatedUser(req,res,next){
+  const data = req.user
+  res.status(200).json({data})
 }
 
 /**On Logout remove cookies and clear user from payload */
 function removeCookies(req, res,next) {
-  res.clearCookie('jwt')
-  res.clearCookie('user')
+  res.clearCookie('jwt',clearCookieOptions)
   req.user =null
   res.sendStatus(204)
 }
@@ -64,10 +49,9 @@ async function create(req, res) {
   const { password } = data
   req.body.data.password = genPassword(password)
   const user = await service.create(data);
-  sendCookies(res)
+  const jwt = issueJWT(res,user)
   res.status(201).json({ data: { user, jwt } });
 }
-
 
 /**** READ FUNCTIONS *****/
 
@@ -88,8 +72,6 @@ function read(req, res) {
   const { user } = res.locals
   res.status(200).json({ data: user })
 }
-
-
 
 /**** LOGIN FUNCTIONS *****/
 
@@ -113,7 +95,7 @@ async function passwordIsValid(req, res, next) {
   const { user } = res.locals
   const isValid = await validPassword(req.body.data.password, user.password)
   if (isValid) {
-    sendCookies(res)
+    issueJWT(res,user)
     res.status(200).json({ data: user })
   } else {
     next({ status: 401, message: 'Password Invalid, Please Try Again' })
@@ -127,5 +109,6 @@ module.exports = {
   create: [asyncErrorBoundary(checkExistsingUserByPhone), asyncErrorBoundary(create)],
   read: [asyncErrorBoundary(userExists), read],
   login: [asyncErrorBoundary(userExistsByPhone), asyncErrorBoundary(passwordIsValid)],
-  logout: removeCookies
+  logout: removeCookies,
+  isAuthorized: isAuthenticatedUser
 }
