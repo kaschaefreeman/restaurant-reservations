@@ -2,7 +2,7 @@ const request = require("supertest");
 
 const app = require("../src/app");
 const knex = require("../src/db/connection");
-const { genPassword } = require("../src/utils/password-utils");
+
 
 describe("US-09 - Test Users Login and CSRF/JWT Authentification", () => {
   beforeAll(() => {
