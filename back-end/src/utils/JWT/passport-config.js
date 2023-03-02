@@ -6,7 +6,7 @@ const PUB_KEY =process.env.PUBLIC_KEY.replace(/^\s+|\s+$/gm,'');
 
 /** JWT Strategy 
  * locate a user where their username will be the phone number
- * Then issue a signed HTTP Only cookie in the response with their JWT Token and another cookie with the userID that can be access and read by the front-end
+ * Then issue a signed HTTP Only cookie in the response with their JWT Token 
  * All requests that require authentification must provide the signed JWT Token
  * The token in the request cookies will be validated against the payload
  */
