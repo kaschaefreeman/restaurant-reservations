@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import { readUser, logout } from '../utils/api';
 import ErrorAlert from "../layout/ErrorAlert";
-import { useParams, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-const UserDashboard = () => {
+const UserDashboard = ({props}) => {
 
-    const [user,setUser] = useState({})
+    const {user, setUser} = props
+
     const [userError, setUserError] = useState(null)
-    const { user_id} = useParams();
 
     const history = useHistory()
     
@@ -15,24 +15,23 @@ const UserDashboard = () => {
         const abortController = new AbortController();
         setUserError(null);
         readUser(userId, abortController.signal)
-          .then(setUser)
           .catch(setUserError);
         return () => abortController.abort();
       }
+      
+      useEffect(()=>{
+        loadUser(user.user_id)
+    }, [user])
+
 
     const onLogoutClick= async (event)=>{
         event.preventDefault()
         const abortController = new AbortController()
         logout(abortController.signal)
+        .then(()=>setUser(null))
         .then(()=>history.push("/"))
         .catch(setUserError);
-
     }
-
-    useEffect(()=>{
-        loadUser(user_id)
-    }, [user_id])
-
 
 
     return ( 

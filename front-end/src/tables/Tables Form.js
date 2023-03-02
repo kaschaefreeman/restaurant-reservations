@@ -33,6 +33,7 @@ const TablesForm = () => {
     }
     return () => abortController.abort();
   };
+  
   return (
     <main>
       <h1 className="mb-3 mt-3">New Table</h1>

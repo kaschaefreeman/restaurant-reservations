@@ -22,11 +22,13 @@ const SeatForm = () => {
   //Use history to go to dashboard after submit, and go back on cancel
   const history = useHistory();
 
-  function loadReservation(){
+  function loadReservation() {
     const abortController = new AbortController();
     setSeatError(null);
-    readReservations(reservation_id,abortController.signal).then(setReservation).catch(setSeatError)
-    return () =>abortController.abort()
+    readReservations(reservation_id, abortController.signal)
+      .then(setReservation)
+      .catch(setSeatError)
+    return () => abortController.abort()
   }
 
   /**
@@ -81,7 +83,7 @@ const SeatForm = () => {
     );
   });
 
-  const {first_name, last_name, people} = reservation
+  const { first_name, last_name, people } = reservation
 
   //Render the form with the select input box and table options
   return (

@@ -301,6 +301,11 @@ export async function getAuth(login, signal) {
   return await fetchJson(url, options, {})
 }
 
+export async function isAuthorized(signal) {
+  const url = new URL(`${API_BASE_URL}/users/isAuthorized`);
+  return await fetchJson(url, { headers, signal, credentials: "include" }, [])
+}
+
 export async function logout(signal) {
   await getAndAttachCSRFHeader(signal)
   const url = new URL(`${API_BASE_URL}/users/logout`)
