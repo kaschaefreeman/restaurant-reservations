@@ -36,8 +36,6 @@ describe("US-09 - Test Users Login and CSRF/JWT Authentication", () => {
         return response.headers["set-cookie"][0].includes(property);
       };
 
-      console.log(response.headers["set-cookie"][0]);
-
       expect(cookieHasProperty("csrfToken")).toBeTruthy();
       expect(cookieHasProperty("Expires")).toBeTruthy();
       expect(cookieHasProperty("HttpOnly")).toBeTruthy();
@@ -58,7 +56,7 @@ describe("US-09 - Test Users Login and CSRF/JWT Authentication", () => {
     });
 
     test("returns 403 if hashed csrf token in cookies is not sent with request and csrf token not sent in request headers", async () => {
-      console.log(user);
+      expect(user).not.toBeUndefined();
 
       const data = { phone, password: process.env.SEED_PASSWORD };
 
@@ -72,13 +70,13 @@ describe("US-09 - Test Users Login and CSRF/JWT Authentication", () => {
     });
 
     test("returns 403 if csrf token is not in request headers", async () => {
+      expect(user).not.toBeUndefined();
+
       const csrfResponse = await request(app)
         .get("/csrf")
         .set("Accept", "application/json");
 
-      console.log(user);
-
-      const data = { phone: user.phone, password: process.env.SEED_PASSWORD };
+      const data = { phone, password: process.env.SEED_PASSWORD };
 
       const response = await request(app)
         .post("/users/login")
@@ -91,7 +89,9 @@ describe("US-09 - Test Users Login and CSRF/JWT Authentication", () => {
     });
 
     test("returns 403 if hashed csrf token in cookies is not sent with request", async () => {
-      const data = { phone: user.phone, password: process.env.SEED_PASSWORD };
+      expect(user).not.toBeUndefined();
+
+      const data = { phone, password: process.env.SEED_PASSWORD };
 
       const csrfResponse = await request(app)
         .get("/csrf")
@@ -119,7 +119,6 @@ describe("US-09 - Test Users Login and CSRF/JWT Authentication", () => {
      */
     test("return 200 for VALID POST request with valid CSRF token and sends user a JSON Web Token and userId in the cookies", async () => {
       expect(user).not.toBeUndefined();
-      console.log(user);
 
       const data = { user_id, phone, password: process.env.SEED_PASSWORD };
 
