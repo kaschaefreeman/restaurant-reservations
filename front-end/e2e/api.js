@@ -27,11 +27,7 @@ const headers = { "Content-Type": "application/json" };
 async function fetchJson(url, options, onCancel) {
   try {
     const response = await fetch(url, options)
-      .then((resp) => {
-        const cookie = resp.headers.get('set-cookie')
-        if(cookie) headers['cookie'] = cookie
-        return resp
-      });
+     headers['cookie']=response.headers.get('set-cookie')
 
     if (response.status === 204) {
       return null;
