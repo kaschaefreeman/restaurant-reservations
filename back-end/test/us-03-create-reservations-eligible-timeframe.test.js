@@ -20,7 +20,17 @@ describe("US-03 - Create reservations eligible timeframe", () => {
   });
 
   describe("POST /reservations", () => {
+
+    let csrfResponse
+
+    beforeEach(async () => {
+      csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json");
+    });
+
     test("returns 400 if reservation_time is not available", async () => {
+      
       const data = {
         first_name: "first",
         last_name: "last",
@@ -29,10 +39,6 @@ describe("US-03 - Create reservations eligible timeframe", () => {
         reservation_time: "09:30",
         people: 3,
       };
-
-      let csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
 
       let response = await request(app)
         .post("/reservations")

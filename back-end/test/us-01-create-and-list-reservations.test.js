@@ -44,17 +44,22 @@ describe("US-01 - Create and list reservations", () => {
   });
 
   describe("POST /reservations", () => {
-    test("returns 400 if data is missing", async () => {
 
-      const csrfResponse = await request(app)
+    let csrfResponse
+
+    beforeEach(async () => {
+      csrfResponse = await request(app)
         .get("/csrf")
-        .set("Accept", "application/json")
+        .set("Accept", "application/json");
+    });
+
+    test("returns 400 if data is missing", async () => {
 
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ datum: {} });
 
       expect(response.body.error).toBeDefined();
@@ -62,6 +67,7 @@ describe("US-01 - Create and list reservations", () => {
     });
 
     test("returns 400 if first_name is missing", async () => {
+
       const data = {
         last_name: "last",
         mobile_number: "800-555-1212",
@@ -69,15 +75,12 @@ describe("US-01 - Create and list reservations", () => {
         reservation_time: "13:30",
         people: 1,
       };
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
 
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("first_name");
@@ -94,22 +97,20 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
-
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("first_name");
       expect(response.status).toBe(400);
+
     });
 
     test("returns 400 if last_name is missing", async () => {
+
       const data = {
         first_name: "first",
         mobile_number: "800-555-1212",
@@ -118,15 +119,12 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
 
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("last_name");
@@ -134,6 +132,7 @@ describe("US-01 - Create and list reservations", () => {
     });
 
     test("returns 400 if last_name is empty", async () => {
+
       const data = {
         first_name: "first",
         last_name: "",
@@ -143,15 +142,11 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
-
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("last_name");
@@ -159,6 +154,7 @@ describe("US-01 - Create and list reservations", () => {
     });
 
     test("returns 400 if mobilePhone is missing", async () => {
+
       const data = {
         first_name: "first",
         last_name: "last",
@@ -166,15 +162,12 @@ describe("US-01 - Create and list reservations", () => {
         reservation_time: "13:30",
         people: 1,
       };
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
 
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("mobile_number");
@@ -182,6 +175,7 @@ describe("US-01 - Create and list reservations", () => {
     });
 
     test("returns 400 if mobilePhone is empty", async () => {
+
       const data = {
         first_name: "first",
         last_name: "last",
@@ -191,15 +185,11 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
-
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("mobile_number");
@@ -207,6 +197,7 @@ describe("US-01 - Create and list reservations", () => {
     });
 
     test("returns 400 if reservation_date is missing", async () => {
+
       const data = {
         first_name: "first",
         last_name: "last",
@@ -214,15 +205,12 @@ describe("US-01 - Create and list reservations", () => {
         reservation_time: "13:30",
         people: 1,
       };
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
 
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("reservation_date");
@@ -230,6 +218,7 @@ describe("US-01 - Create and list reservations", () => {
     });
 
     test("returns 400 if reservation_date is empty", async () => {
+
       const data = {
         first_name: "first",
         last_name: "last",
@@ -239,22 +228,20 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
-
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("reservation_date");
       expect(response.status).toBe(400);
+
     });
 
     test("returns 400 if reservation_date is not a date", async () => {
+
       const data = {
         first_name: "first",
         last_name: "last",
@@ -264,22 +251,20 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
-
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("reservation_date");
       expect(response.status).toBe(400);
+
     });
 
     test("returns 400 if reservation_time is missing", async () => {
+
       const data = {
         first_name: "first",
         last_name: "last",
@@ -288,22 +273,20 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
-
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("reservation_time");
       expect(response.status).toBe(400);
+
     });
 
     test("returns 400 if reservation_time is empty", async () => {
+
       const data = {
         first_name: "first",
         last_name: "last",
@@ -313,22 +296,20 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
-
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("reservation_time");
       expect(response.status).toBe(400);
+
     });
 
     test("returns 400 if reservation_time is not a time", async () => {
+
       const data = {
         first_name: "first",
         last_name: "last",
@@ -338,22 +319,20 @@ describe("US-01 - Create and list reservations", () => {
         people: 1,
       };
 
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
-
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.status).toBe(400);
       expect(response.body.error).toContain("reservation_time");
+
     });
 
     test("returns 400 if people is missing", async () => {
+
       const data = {
         first_name: "first",
         last_name: "last",
@@ -362,22 +341,20 @@ describe("US-01 - Create and list reservations", () => {
         reservation_time: "17:30",
       };
 
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
-
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("people");
       expect(response.status).toBe(400);
+
     });
 
     test("returns 400 if people is zero", async () => {
+
       const data = {
         first_name: "first",
         last_name: "last",
@@ -387,22 +364,21 @@ describe("US-01 - Create and list reservations", () => {
         people: 0,
       };
 
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
 
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("people");
       expect(response.status).toBe(400);
+
     });
 
     test("returns 400 if people is not a number", async () => {
+
       const data = {
         first_name: "first",
         last_name: "last",
@@ -412,22 +388,20 @@ describe("US-01 - Create and list reservations", () => {
         people: "2",
       };
 
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
-
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toContain("people");
       expect(response.status).toBe(400);
+
     });
 
     test("returns 201 if data is valid", async () => {
+
       const data = {
         first_name: "first",
         last_name: "last",
@@ -437,15 +411,11 @@ describe("US-01 - Create and list reservations", () => {
         people: 2,
       };
 
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
-
       const response = await request(app)
         .post("/reservations")
         .set("Accept", "application/json")
-        .set('x-csrf-token', csrfResponse.body.data)
-        .set('Cookie', csrfResponse.headers['set-cookie'])
+        .set("x-csrf-token", csrfResponse.body.data)
+        .set("Cookie", csrfResponse.headers["set-cookie"])
         .send({ data });
 
       expect(response.body.error).toBeUndefined();

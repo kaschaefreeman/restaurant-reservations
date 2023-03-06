@@ -33,16 +33,15 @@ describe("US-04 - Seat reservation", () => {
 
     describe("POST /tables", () => {
       test("returns 400 if data is missing", async () => {
-
         const csrfResponse = await request(app)
           .get("/csrf")
-          .set("Accept", "application/json")
+          .set("Accept", "application/json");
 
         const response = await request(app)
           .post("/tables")
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ datum: {} });
 
         expect(response.body.error).toBeDefined();
@@ -56,13 +55,13 @@ describe("US-04 - Seat reservation", () => {
 
         const csrfResponse = await request(app)
           .get("/csrf")
-          .set("Accept", "application/json")
+          .set("Accept", "application/json");
 
         const response = await request(app)
           .post("/tables")
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ data });
 
         expect(response.body.error).toContain("table_name");
@@ -77,13 +76,13 @@ describe("US-04 - Seat reservation", () => {
 
         const csrfResponse = await request(app)
           .get("/csrf")
-          .set("Accept", "application/json")
+          .set("Accept", "application/json");
 
         const response = await request(app)
           .post("/tables")
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ data });
 
         expect(response.body.error).toContain("table_name");
@@ -97,13 +96,13 @@ describe("US-04 - Seat reservation", () => {
         };
         const csrfResponse = await request(app)
           .get("/csrf")
-          .set("Accept", "application/json")
+          .set("Accept", "application/json");
 
         const response = await request(app)
           .post("/tables")
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ data });
 
         expect(response.body.error).toContain("table_name");
@@ -117,13 +116,13 @@ describe("US-04 - Seat reservation", () => {
 
         const csrfResponse = await request(app)
           .get("/csrf")
-          .set("Accept", "application/json")
+          .set("Accept", "application/json");
 
         const response = await request(app)
           .post("/tables")
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ data });
 
         expect(response.body.error).toContain("capacity");
@@ -137,13 +136,13 @@ describe("US-04 - Seat reservation", () => {
         };
         const csrfResponse = await request(app)
           .get("/csrf")
-          .set("Accept", "application/json")
+          .set("Accept", "application/json");
 
         const response = await request(app)
           .post("/tables")
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ data });
 
         expect(response.body.error).toContain("capacity");
@@ -158,13 +157,13 @@ describe("US-04 - Seat reservation", () => {
 
         const csrfResponse = await request(app)
           .get("/csrf")
-          .set("Accept", "application/json")
+          .set("Accept", "application/json");
 
         const response = await request(app)
           .post("/tables")
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ data });
 
         expect(response.body.error).toContain("capacity");
@@ -179,13 +178,13 @@ describe("US-04 - Seat reservation", () => {
 
         const csrfResponse = await request(app)
           .get("/csrf")
-          .set("Accept", "application/json")
+          .set("Accept", "application/json");
 
         const response = await request(app)
           .post("/tables")
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ data });
 
         expect(response.body.error).toBeUndefined();
@@ -228,120 +227,115 @@ describe("US-04 - Seat reservation", () => {
   describe("Seat reservation", () => {
     let barTableOne;
     let tableOne;
+    let csrfResponse;
 
     beforeEach(async () => {
       barTableOne = await knex("tables").where("table_name", "Bar #1").first();
       tableOne = await knex("tables").where("table_name", "#1").first();
+      
+      csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json");
     });
 
     describe("PUT /tables/:table_id/seat", () => {
-      test("returns 400 if data is missing", async () => {
-        expect(tableOne).not.toBeUndefined();
 
-        const csrfResponse = await request(app)
-          .get("/csrf")
-          .set("Accept", "application/json")
+      test("returns 400 if data is missing", async () => {
+
+        expect(tableOne).not.toBeUndefined();
 
         const response = await request(app)
           .put(`/tables/${tableOne.table_id}/seat`)
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ datum: {} });
 
         expect(response.body.error).toBeDefined();
         expect(response.status).toBe(400);
+
       });
 
       test("returns 400 if reservation_id is missing", async () => {
-        expect(tableOne).not.toBeUndefined();
-        const data = {};
 
-        const csrfResponse = await request(app)
-          .get("/csrf")
-          .set("Accept", "application/json")
+        expect(tableOne).not.toBeUndefined();
+
+        const data = {};
 
         const response = await request(app)
           .put(`/tables/${tableOne.table_id}/seat`)
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ data });
 
         expect(response.body.error).toContain("reservation_id");
         expect(response.status).toBe(400);
+
       });
 
       test("returns 404 if reservation_id does not exist", async () => {
+
         expect(tableOne).not.toBeUndefined();
 
         const data = {
           reservation_id: 999,
         };
 
-        const csrfResponse = await request(app)
-          .get("/csrf")
-          .set("Accept", "application/json")
-
         const response = await request(app)
           .put(`/tables/${tableOne.table_id}/seat`)
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ data });
 
         expect(response.body.error).toContain("999");
         expect(response.status).toBe(404);
+
       });
 
       test("returns 200 if table has sufficient capacity", async () => {
-        expect(tableOne).not.toBeUndefined();
 
-        const csrfResponse = await request(app)
-          .get("/csrf")
-          .set("Accept", "application/json")
+        expect(tableOne).not.toBeUndefined();
 
         const response = await request(app)
           .put(`/tables/${tableOne.table_id}/seat`)
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ data: { reservation_id: 1 } });
 
         expect(response.body.error).toBeUndefined();
         expect(response.status).toBe(200);
-      });
-      test("returns 400 if table does not have sufficient capacity", async () => {
-        expect(barTableOne).not.toBeUndefined();
 
-        const csrfResponse = await request(app)
-          .get("/csrf")
-          .set("Accept", "application/json")
+      });
+
+      test("returns 400 if table does not have sufficient capacity", async () => {
+        
+        expect(barTableOne).not.toBeUndefined();
 
         const response = await request(app)
           .put(`/tables/${barTableOne.table_id}/seat`)
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ data: { reservation_id: 1 } });
 
         expect(response.body.error).toContain("capacity");
         expect(response.status).toBe(400);
+
       });
 
       test("returns 400 if table is occupied", async () => {
-        expect(tableOne).not.toBeUndefined();
 
-        let csrfResponse = await request(app)
-          .get("/csrf")
-          .set("Accept", "application/json")
+        expect(tableOne).not.toBeUndefined();
 
         // first, occupy the table
         const occupyResponse = await request(app)
           .put(`/tables/${tableOne.table_id}/seat`)
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ data: { reservation_id: 1 } });
 
         expect(occupyResponse.body.error).toBeUndefined();
@@ -349,18 +343,19 @@ describe("US-04 - Seat reservation", () => {
 
         csrfResponse = await request(app)
           .get("/csrf")
-          .set("Accept", "application/json")
+          .set("Accept", "application/json");
 
         // next, try to assign the table to another reservation
         const doubleAssignResponse = await request(app)
           .put(`/tables/${tableOne.table_id}/seat`)
           .set("Accept", "application/json")
-          .set('x-csrf-token', csrfResponse.body.data)
-          .set('Cookie', csrfResponse.headers['set-cookie'])
+          .set("x-csrf-token", csrfResponse.body.data)
+          .set("Cookie", csrfResponse.headers["set-cookie"])
           .send({ data: { reservation_id: 2 } });
 
         expect(doubleAssignResponse.body.error).toContain("occupied");
         expect(doubleAssignResponse.status).toBe(400);
+        
       });
     });
   });

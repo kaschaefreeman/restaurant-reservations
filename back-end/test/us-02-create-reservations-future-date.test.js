@@ -20,7 +20,17 @@ describe("US-02 - Create reservations future date", () => {
   });
 
   describe("POST /reservations", () => {
+
+    let csrfResponse
+
+    beforeEach(async () => {
+      csrfResponse = await request(app)
+        .get("/csrf")
+        .set("Accept", "application/json");
+    });
+    
     test("returns 400 if reservation occurs in the past", async () => {
+
       const data = {
         first_name: "first",
         last_name: "last",
@@ -29,10 +39,6 @@ describe("US-02 - Create reservations future date", () => {
         reservation_time: "17:30",
         people: 3,
       };
-
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
 
       const response = await request(app)
         .post("/reservations")
@@ -43,8 +49,11 @@ describe("US-02 - Create reservations future date", () => {
 
       expect(response.body.error).toContain("future");
       expect(response.status).toBe(400);
+
     });
+
     test("returns 400 if reservation_date falls on a tuesday", async () => {
+      
       const data = {
         first_name: "first",
         last_name: "last",
@@ -53,10 +62,6 @@ describe("US-02 - Create reservations future date", () => {
         reservation_time: "17:30",
         people: 3,
       };
-
-      const csrfResponse = await request(app)
-        .get("/csrf")
-        .set("Accept", "application/json")
 
       const response = await request(app)
         .post("/reservations")
@@ -67,6 +72,7 @@ describe("US-02 - Create reservations future date", () => {
 
       expect(response.body.error).toContain("closed");
       expect(response.status).toBe(400);
+      
     });
   });
 });
