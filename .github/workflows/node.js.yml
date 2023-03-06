@@ -59,6 +59,9 @@ jobs:
         env:
           DATABASE_URL_TEST: postgresql://postgres:postgres@127.0.0.1:5432
           NODE_ENV: test
+          PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
+          PUBLIC_KEY: ${{secrets.PUBLIC_KEY}}
+          SEED_PASSWORD: ${{secrets.SEED_PASSWORD}}
 
       - name: Archive screenshots
         uses: actions/upload-artifact@v2
