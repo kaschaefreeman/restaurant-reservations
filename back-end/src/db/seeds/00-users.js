@@ -8,7 +8,7 @@ exports.seed = function (knex) {
     .then(users.forEach((user) => {
       genPassword(process.env.SEED_PASSWORD)
         .then((password) => {user.password = password; return user})
+        .then((data)=>knex('users').insert(data))
     })
     )
-    .then(()=>knex('users').insert(users))
 }
