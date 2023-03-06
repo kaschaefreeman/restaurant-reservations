@@ -62,6 +62,8 @@ jobs:
           PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
           PUBLIC_KEY: ${{secrets.PUBLIC_KEY}}
           SEED_PASSWORD: ${{secrets.SEED_PASSWORD}}
+          SESSION_SECRET: ${{secrets.SESSION_SECRET}}
+          CSRF_SECRET: ${{secrets.CSRF_SECRET}}
 
       - name: Archive screenshots
         uses: actions/upload-artifact@v2
@@ -80,3 +82,5 @@ jobs:
           PRIVATE_KEY: ${{secrets.PRIVATE_KEY}}
           PUBLIC_KEY: ${{secrets.PUBLIC_KEY}}
           SEED_PASSWORD: ${{secrets.SEED_PASSWORD}}
+          SESSION_SECRET: ${{secrets.SESSION_SECRET}}
+          CSRF_SECRET: ${{secrets.CSRF_SECRET}}
