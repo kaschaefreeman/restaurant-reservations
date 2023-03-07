@@ -4,6 +4,9 @@ const app = require("../src/app");
 const knex = require("../src/db/connection");
 
 describe("US-08 - Change an existing reservation", () => {
+
+  let csrfResponse
+
   beforeAll(() => {
     return knex.migrate
       .forceFreeMigrationsLock()
@@ -11,9 +14,14 @@ describe("US-08 - Change an existing reservation", () => {
       .then(() => knex.migrate.latest());
   });
 
-  beforeEach(() => {
-    return knex.seed.run();
+  beforeEach(async () => {
+    await knex.seed.run();
+    csrfResponse = await request(app)
+      .get("/csrf")
+      .set("Accept", "application/json");
   });
+
+  
 
   afterAll(async () => {
     return await knex.migrate.rollback(null, true).then(() => knex.destroy());
@@ -29,10 +37,6 @@ describe("US-08 - Change an existing reservation", () => {
         reservation_time: "18:00",
         people: 2,
       };
-
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
 
       const response = await request(app)
         .put("/reservations/999999")
@@ -65,10 +69,6 @@ describe("US-08 - Change an existing reservation", () => {
         ([key, value]) => (reservation[key] = value)
       );
 
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
-
       const response = await request(app)
         .put("/reservations/1")
         .set("Accept", "application/json")
@@ -96,10 +96,6 @@ describe("US-08 - Change an existing reservation", () => {
         people: 3,
       };
 
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
-
       const response = await request(app)
         .put("/reservations/1")
         .set("Accept", "application/json")
@@ -121,10 +117,6 @@ describe("US-08 - Change an existing reservation", () => {
         people: 3,
       };
 
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
-
       const response = await request(app)
         .put("/reservations/1")
         .set("Accept", "application/json")
@@ -144,10 +136,6 @@ describe("US-08 - Change an existing reservation", () => {
         reservation_time: "13:30",
         people: 3,
       };
-
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
 
       const response = await request(app)
         .put("/reservations/1")
@@ -170,10 +158,6 @@ describe("US-08 - Change an existing reservation", () => {
         people: 3,
       };
 
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
-
       const response = await request(app)
         .put("/reservations/1")
         .set("Accept", "application/json")
@@ -193,10 +177,6 @@ describe("US-08 - Change an existing reservation", () => {
         reservation_time: "13:30",
         people: 3,
       };
-
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
 
       const response = await request(app)
         .put("/reservations/1")
@@ -219,10 +199,6 @@ describe("US-08 - Change an existing reservation", () => {
         people: 3,
       };
 
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
-
       const response = await request(app)
         .put("/reservations/1")
         .set("Accept", "application/json")
@@ -242,10 +218,6 @@ describe("US-08 - Change an existing reservation", () => {
         reservation_time: "13:30",
         people: 1,
       };
-
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
 
       const response = await request(app)
         .put("/reservations/1")
@@ -268,10 +240,6 @@ describe("US-08 - Change an existing reservation", () => {
         people: 1,
       };
 
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
-
       const response = await request(app)
         .put("/reservations/1")
         .set("Accept", "application/json")
@@ -292,10 +260,6 @@ describe("US-08 - Change an existing reservation", () => {
         people: 2,
       };
 
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
-
       const response = await request(app)
         .put("/reservations/1")
         .set("Accept", "application/json")
@@ -315,10 +279,6 @@ describe("US-08 - Change an existing reservation", () => {
         reservation_date: "2025-01-01",
         people: 2,
       };
-
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
 
       const response = await request(app)
         .put("/reservations/1")
@@ -341,10 +301,6 @@ describe("US-08 - Change an existing reservation", () => {
         people: 2,
       };
 
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
-
       const response = await request(app)
         .put("/reservations/1")
         .set("Accept", "application/json")
@@ -365,10 +321,6 @@ describe("US-08 - Change an existing reservation", () => {
         people: 2,
       };
 
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
-
       const response = await request(app)
         .put("/reservations/1")
         .set("Accept", "application/json")
@@ -388,10 +340,6 @@ describe("US-08 - Change an existing reservation", () => {
         reservation_date: "2025-01-01",
         reservation_time: "17:30",
       };
-
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
 
       const response = await request(app)
         .put("/reservations/1")
@@ -414,10 +362,6 @@ describe("US-08 - Change an existing reservation", () => {
         people: 0,
       };
 
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
-
       const response = await request(app)
         .put("/reservations/1")
         .set("Accept", "application/json")
@@ -438,10 +382,6 @@ describe("US-08 - Change an existing reservation", () => {
         reservation_time: "17:30",
         people: "2",
       };
-
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
 
       const response = await request(app)
         .put("/reservations/1")
@@ -464,10 +404,6 @@ describe("US-08 - Change an existing reservation", () => {
       expect(reservation).not.toBeUndefined();
 
       const status = "cancelled";
-
-      const csrfResponse = await request(app)
-      .get("/csrf")
-      .set("Accept", "application/json")
 
       const response = await request(app)
         .put(`/reservations/${reservation.reservation_id}/status`)
