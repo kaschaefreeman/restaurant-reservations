@@ -46,19 +46,18 @@ describe("US-09 - Test Users Login and CSRF/JWT Authentication", () => {
 
   describe("POST /users/login", () => {
     let user;
-    let phone;
-    let password;
-    let user_id;
 
     beforeEach(async () => {
-      user = await knex("users").where({ phone: "777-777-7777" }).first("*");
-      ({ user_id, phone, password } = user);
+      user = await knex("users")
+        .where("phone", "777-777-7777")
+        .first()
     });
 
     test("returns 403 if hashed csrf token in cookies is not sent with request and csrf token not sent in request headers", async () => {
+
       expect(user).not.toBeUndefined();
 
-      const data = { phone, password: process.env.SEED_PASSWORD };
+      const data = { phone:user.phone, password: process.env.SEED_PASSWORD };
 
       const response = await request(app)
         .post("/users/login")
@@ -70,13 +69,14 @@ describe("US-09 - Test Users Login and CSRF/JWT Authentication", () => {
     });
 
     test("returns 403 if csrf token is not in request headers", async () => {
+
       expect(user).not.toBeUndefined();
 
       const csrfResponse = await request(app)
         .get("/csrf")
         .set("Accept", "application/json");
 
-      const data = { phone, password: process.env.SEED_PASSWORD };
+      const data = { phone:user.phone, password: process.env.SEED_PASSWORD };
 
       const response = await request(app)
         .post("/users/login")
@@ -89,9 +89,10 @@ describe("US-09 - Test Users Login and CSRF/JWT Authentication", () => {
     });
 
     test("returns 403 if hashed csrf token in cookies is not sent with request", async () => {
+    
       expect(user).not.toBeUndefined();
 
-      const data = { phone, password: process.env.SEED_PASSWORD };
+      const data = { phone:user.phone, password: process.env.SEED_PASSWORD };
 
       const csrfResponse = await request(app)
         .get("/csrf")
@@ -120,8 +121,9 @@ describe("US-09 - Test Users Login and CSRF/JWT Authentication", () => {
     test("return 200 for VALID POST request with valid CSRF token and sends user a JSON Web Token and userId in the cookies", async () => {
       expect(user).not.toBeUndefined();
 
-      const data = { user_id, phone, password: process.env.SEED_PASSWORD };
+      const {phone, user_id, password} = user
 
+      const data = { phone, password: process.env.SEED_PASSWORD };
       const csrfResponse = await request(app)
         .get("/csrf")
         .set("Accept", "application/json");
